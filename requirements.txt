@@ -1,0 +1,7 @@
+pytest==8.1.1
+requests==2.26.0
+Faker==24.4.0
+allure-pytest==2.13.5
+pytest-html==4.1.1
+python-dotenv==1.0.1
+pylint==3.0.2
