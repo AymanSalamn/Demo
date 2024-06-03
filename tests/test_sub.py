@@ -1,2 +1,2 @@
 def test_sub():
-  assert 20 == (15 - 5)
+  assert 20 == (25 - 5)
