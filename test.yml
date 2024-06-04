@@ -1,1 +1,32 @@
-s
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - '**/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})"
+
+      - name: Run commands on changed files
+        run: |
+          changed_files="${{ steps.changed-files.outputs.files }}"
+          for file in $changed_files; do
+            if [[ $file == *.sh ]]; then
+              echo "Running bash $file"
+              bash "$file"
+            elif [[ $file == *.py ]]; then
+              echo "Running python $file"
+              python "$file"
+            fi
+          done
