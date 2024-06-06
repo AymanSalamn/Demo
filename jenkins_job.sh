@@ -1,37 +1,22 @@
 #!/bin/bash
 
-allure --version
+# Run Tests
+pytest --alluredir=report_results_json
 
-# # Process and Upload Report
+# Generate Allure Report 
+allure generate --clean --single-file report_results_json -o report_results_html
 
-# # install pip install allure-pytest
-# pip install allure-pytest
+# Compressed Report Results
+zip -r report_results.zip report_results_html
 
 
+# Set Directory name
+DIR_NAME=$(date +%Y-%m-%d)
+mkdir -p "$DIR_NAME"
+cd "$DIR_NAME"
+SUB_DIR=$(date +%H-%M-%S)
+mkdir -p "$SUB_DIR"
+cd ..
 
-# # Run Pytest
-# pytest 
-
-# # Generate report
-# pytest --alluredir=ReportResultsFilesTest
-
-# # Run Allure command
-# allure generate --clean --single-file ReportResultsFilesTest -o ReportResults
-
-# # # Set directory name
-# # DIR_NAME=$(date +%Y-%m-%d)
-# # echo "DIR_NAME=\"$DIR_NAME\"" >>$GITHUB_ENV
-# # mkdir -p "$DIR_NAME"
-# # cd "$DIR_NAME"
-# # SUB_DIR=$(date +%H-%M-%S)
-# # echo "SUB_DIR=\"$SUB_DIR\"" >>$GITHUB_ENV
-# # mkdir -p "$SUB_DIR"
-
-# # # Compress files
-# # zip -r report_results.zip ReportResults
-
-# # # Move files to the new directory
-# # mv report_results.zip "${DIR_NAME}/${SUB_DIR}"
-
-# # # Upload to S3
-# # aws s3 sync "${DIR_NAME}/${SUB_DIR}" s3://${{ secrets.AWS_S3_BUCKET }}/${DIR_NAME}/${SUB_DIR} --region ${{ secrets.AWS_REGION }}
+# Move Directory
+mv report_results.zip "$DIR_NAME/$SUB_DIR"
