@@ -2,13 +2,12 @@
 
 
 # install java
-sudo apt update
-sudo apt install default-jdk -y
+apt install default-jdk -y
 
 # install allure command
 wget https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
-sudo tar -zxvf allure-2.27.0.tgz -C /opt/
-sudo ln -s /opt/allure-2.27.0/bin/allure /usr/bin/allure 
+tar -zxvf allure-2.27.0.tgz -C /opt/
+ln -s /opt/allure-2.27.0/bin/allure /usr/bin/allure 
 allure --version
 
 
