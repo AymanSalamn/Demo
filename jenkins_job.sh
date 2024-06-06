@@ -2,6 +2,11 @@
 
 # Process and Upload Report
 
+
+# install pip install allure-pytest
+
+pip install allure-pytest
+
 # Run Pytest
 pytest 
 
