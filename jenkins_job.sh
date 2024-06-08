@@ -33,7 +33,7 @@ zip -r report_results.zip report_results_html
 DIR_NAME=$(date +%Y-%m-%d)
 mkdir -p "$DIR_NAME"
 cd "$DIR_NAME"
-SUB_DIR=$results_dir_name"
+SUB_DIR=$results_dir_name
 mkdir -p "$SUB_DIR"
 cd ..
 
