@@ -35,3 +35,17 @@ cd ..
 
 # Move Directory
 mv report_results.zip "$DIR_NAME/$SUB_DIR"
+
+
+
+# Upload to S3
+AWS_S3_BUCKET="pytest-allure-report-results"
+AWS_REGION="us-east"
+
+echo "$AWS_S3_BUCKET"
+echo "$AWS_REGION"
+
+aws s3 cp "$DIR_NAME/$SUB_DIR/report_results.zip" s3://"$AWS_S3_BUCKET"/"$DIR_NAME"/"$SUB_DIR/"
+
+
+
