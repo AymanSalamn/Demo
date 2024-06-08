@@ -16,7 +16,8 @@ allure_dir="$current_dir/allure-2.27.0"
 
 
 # Run Tests
-pytest --alluredir=report_results_json
+#pytest --alluredir=report_results_json
+$pytest_command
 
 # Generate Allure Report 
 "$allure_dir"/bin/allure  generate --clean --single-file report_results_json -o report_results_html
@@ -42,8 +43,12 @@ printenv
 AWS_S3_BUCKET="pytest-allure-report-results"
 AWS_REGION="us-east"
 
-echo "$AWS_S3_BUCKET"
-echo "$AWS_REGION"
+echo "$AWS_ACCESS_KEY"
+echo "$AWS_SECRET_KEY"
+
+export AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY"
+export AWS_SECRET_ACCESS_KEY="$AWS_SECRET_KEY"
+
 
 aws s3 cp "$DIR_NAME/$SUB_DIR/report_results.zip" s3://"$AWS_S3_BUCKET"/"$DIR_NAME"/"$SUB_DIR/"
 
