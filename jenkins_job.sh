@@ -4,12 +4,15 @@
 # install java
 apt install default-jdk -y
 
-# install allure command
+
+current_dir=$(pwd)
 wget https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
-pwd
-tar -zxvf allure-2.27.0.tgz -C /var/lib/jenkins/workspace/APIAutomation/.
-ln -sf  /var/lib/jenkins/workspace/APIAutomation/allure-2.27.0/bin/allure /usr/bin/allure 
-allure --version
+tar -zxvf allure-2.27.0.tgz -C "$current_dir"
+allure_dir="$current_dir/allure-2.27.0"
+#ln -sf "$allure_dir"/bin/allure /usr/bin/allure
+
+# Check Allure version
+"$allure_dir"/bin/allure --version
 
 
 # # Run Tests
