@@ -37,7 +37,7 @@ cd ..
 mv report_results.zip "$DIR_NAME/$SUB_DIR"
 
 
-
+printenv
 # Upload to S3
 AWS_S3_BUCKET="pytest-allure-report-results"
 AWS_REGION="us-east"
