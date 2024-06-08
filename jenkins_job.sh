@@ -17,10 +17,13 @@ allure_dir="$current_dir/allure-2.27.0"
 
 # Run Tests
 #pytest --alluredir=report_results_json
-$pytest_command
+command="$pytest_command --alluredir=$results_dir_name"
+# Execute the concatenated command
+$command
+
 
 # Generate Allure Report 
-"$allure_dir"/bin/allure  generate --clean --single-file report_results_json -o report_results_html
+"$allure_dir"/bin/allure  generate --clean --single-file $results_dir_name -o report_results_html
 
 # Compressed Report Results
 zip -r report_results.zip report_results_html
@@ -30,7 +33,7 @@ zip -r report_results.zip report_results_html
 DIR_NAME=$(date +%Y-%m-%d)
 mkdir -p "$DIR_NAME"
 cd "$DIR_NAME"
-SUB_DIR=$(date +%H-%M-%S)
+SUB_DIR=$results_dir_name"
 mkdir -p "$SUB_DIR"
 cd ..
 
