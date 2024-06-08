@@ -15,23 +15,23 @@ allure_dir="$current_dir/allure-2.27.0"
 "$allure_dir"/bin/allure --version
 
 
-# # Run Tests
-# pytest --alluredir=report_results_json
+# Run Tests
+pytest --alluredir=report_results_json
 
-# # Generate Allure Report 
-# allure generate --clean --single-file report_results_json -o report_results_html
+# Generate Allure Report 
+"$allure_dir"/bin/allure  generate --clean --single-file report_results_json -o report_results_html
 
-# # Compressed Report Results
-# zip -r report_results.zip report_results_html
+# Compressed Report Results
+zip -r report_results.zip report_results_html
 
 
-# # Set Directory name
-# DIR_NAME=$(date +%Y-%m-%d)
-# mkdir -p "$DIR_NAME"
-# cd "$DIR_NAME"
-# SUB_DIR=$(date +%H-%M-%S)
-# mkdir -p "$SUB_DIR"
-# cd ..
+# Set Directory name
+DIR_NAME=$(date +%Y-%m-%d)
+mkdir -p "$DIR_NAME"
+cd "$DIR_NAME"
+SUB_DIR=$(date +%H-%M-%S)
+mkdir -p "$SUB_DIR"
+cd ..
 
-# # Move Directory
-# mv report_results.zip "$DIR_NAME/$SUB_DIR"
+# Move Directory
+mv report_results.zip "$DIR_NAME/$SUB_DIR"
