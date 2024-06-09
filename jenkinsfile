@@ -1,37 +1,30 @@
 pipeline {
     agent any
-
-    environment {
-        ALLURE_VERSION = '2.27.0'
-        CURRENT_DIR = pwd()
-        ALLURE_TGZ = "allure-${ALLURE_VERSION}.tgz"
-        ALLURE_URL = "https://github.com/allure-framework/allure2/releases/download/${ALLURE_VERSION}/${ALLURE_TGZ}"
-        ALLURE_DIR = "${env.CURRENT_DIR}/allure-${ALLURE_VERSION}"
-    }
-
+    
     stages {
         stage('Install Allure') {
             steps {
                 script {
-                    // Download Allure
-                    sh "wget -q -nv ${env.ALLURE_URL}"
+                    // Define Allure version to install
+                    def allureVersion = '2.27.0'
                     
-                    // Extract Allure
-                    sh "tar -zxf ${env.ALLURE_TGZ} -C ${env.CURRENT_DIR} > /dev/null"
+                    // Download Allure tar.gz file
+                    sh "wget -O allure-${allureVersion}.tgz https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${allureVersion}/allure-commandline-${allureVersion}.tgz"
                     
-                    // Create symbolic link
-                    sh "ln -sf ${env.ALLURE_DIR}/bin/allure /usr/bin/allure"
+                    // Unpack the downloaded file
+                    sh "tar -zxf allure-${allureVersion}.tgz -C ./allure-${allureVersion}"
+                    
+                    // Set Allure bin directory in PATH
+                    env.PATH = "${env.PATH}:${env.WORKSPACE}/allure-${allureVersion}/bin"
+                    
+                    // Print Allure version to verify installation
+                    sh "allure --version"
                 }
             }
         }
+        
+        // Add other stages of your pipeline
     }
     
-    post {
-        always {
-            script {
-                // Cleanup downloaded files
-                sh "rm -f ${env.ALLURE_TGZ}"
-            }
-        }
-    }
+    // Add post-build actions if necessary
 }
