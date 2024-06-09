@@ -15,7 +15,7 @@ pipeline {
                     sh "wget -O allure-${allureVersion}.tgz https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${allureVersion}/allure-commandline-${allureVersion}.tgz"
                     
                     // Unpack the downloaded file
-                    sh "tar -zxf allure-${allureVersion}.tgz -C ${current_dir}"
+                    sh "tar -zxf allure-${allureVersion}.tgz -C ${current_dir}/allure-2.27.0"
 
                     su 'ls'
                 }
