@@ -18,6 +18,7 @@ pipeline {
                     env.CURRENT_DIR = current_dir
                     def allure_dir="${env.CURRENT_DIR}/allure-2.27.0"
                     sh "ln -sf ${allure_dir}/bin/allure /usr/bin/allure"
+                    sh "${allure_dir}/bin/allure --version"
                     
                 }
             }
