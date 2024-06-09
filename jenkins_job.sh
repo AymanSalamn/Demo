@@ -44,6 +44,6 @@ export AWS_SECRET_ACCESS_KEY="$AWS_SECRET_KEY"
 
 aws s3 cp "$DIR_NAME/$SUB_DIR/${report_results_dir_html}.zip" s3://"$AWS_S3_BUCKET"/"$DIR_NAME"/"$SUB_DIR/"
 
-url=$(aws s3 presign s3://"$AWS_S3_BUCKET"/"$DIR_NAME"/"$SUB_DIR/${report_results_dir_html}.zip" --expires-in $expiry_seconds)
-echo "Download URL: $url"
+# url=$(aws s3 presign s3://"$AWS_S3_BUCKET"/"$DIR_NAME"/"$SUB_DIR/${report_results_dir_html}.zip" --expires-in $expiry_seconds)
+# echo "Download URL: $url"
 
