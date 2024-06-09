@@ -2,8 +2,8 @@
 
 # Install Allure 
 current_dir=$(pwd)
-wget https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
-tar -zxvf allure-2.27.0.tgz -C "$current_dir"
+wget https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz > /dev/null
+tar -zxvf allure-2.27.0.tgz -C "$current_dir" > /dev/null
 allure_dir="$current_dir/allure-2.27.0"
 #ln -sf "$allure_dir"/bin/allure /usr/bin/allure
 
