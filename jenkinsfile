@@ -10,9 +10,7 @@ pipeline {
                     sh 'tar -zxf allure-2.27.0.tgz'
                     def allure_dir="${currentDir}/allure-2.27.0"
                     echo "${allure_dir}"
-                    #sh 'ln -sf "${allure_dir}/bin/allure" /usr/bin/allure'
-                    #def param1Value = params.pytestCommand
-                    #echo "Parameter 1 value: ${param1Value}"
+                    "${allure_dir}"/bin/allure --version
                 }
             }
         }
