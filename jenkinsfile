@@ -1,5 +1,13 @@
 pipeline {
     agent any
+
+    environment {
+        PYTEST_COMMAND = params.pytestCommand
+        REPORT_DIR_NAME = params.resultsDirName
+        REPORT_DIR_NAME_HTML = "${params.resultsDirName}_html"
+        CURRENT_DIR = pwd()
+    }
+
     stages {
         stage('Install Allure') {
             steps {
@@ -15,12 +23,17 @@ pipeline {
         stage('Run Test') {
             steps {
                 script {
-                    def paytest_command = params.pytestCommand
-                    def report_results_dir = params.resultsDirName
-                    sh "${paytest_command} --alluredir=${report_results_dir}"
+                    sh "${env.PYTEST_COMMAND} --alluredir=${env.REPORT_DIR_NAME}"
                 }
             }
-        
+        }
+
+        stage ('Generate Allure Report') {
+            steps {
+                script {
+                    sh '${env.CURRENT_DIR}/allure-2.27.0/bin/allure  generate --clean --single-file ${env.REPORT_DIR_NAME} -o ${env.REPORT_DIR_NAME_HTML}'
+                }
+            }
         }
         
     }
