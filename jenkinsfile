@@ -65,7 +65,7 @@ pipeline {
             steps {
                 script {
                     def todayDate = new Date().format('yyyy-MM-dd')
-                    def full_path = "${mainDir}/${env.REPORT_DIR_NAME_HTM}"
+                    def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTM}"
                     echo "${full_path}"
                 }
             }
