@@ -50,7 +50,7 @@ pipeline {
             steps {
                 script {
                     def todayDate = new Date().format('yyyy-MM-dd')
-                    def subDirName = env.SUBDIR_NAME ?: 'default_subdir'
+                    def subDirName = env.REPORT_DIR_NAME_HTML ?: 'default_subdir'
                     def mainDir = todayDate
                     def subDir = "${mainDir}/${subDirName}"
                     
