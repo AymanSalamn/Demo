@@ -6,7 +6,6 @@ pipeline {
         REPORT_DIR_NAME = "${params.resultsDirName}"
         REPORT_DIR_NAME_HTML = "${params.resultsDirName}_html"
     }
-    def DIR_NAME
     stages {
         stage('Install Allure') {
             steps {
