@@ -54,9 +54,6 @@ pipeline {
                     def subDirName = env.REPORT_DIR_NAME_HTML ?: 'default_subdir'
                     def mainDir = todayDate
                     def subDir = "${mainDir}/${subDirName}"
-                    env.REPORT_RESULTS_FULL_PATH = subDir
-                    echo "Creating main directory: ${mainDir}"
-                    echo "Creating subdirectory: ${subDir}"
                     sh "mkdir -p ${mainDir}"
                     sh "mkdir -p ${subDir}"
                 }
@@ -67,7 +64,9 @@ pipeline {
         stage ('Upload Results To S3'){
             steps {
                 script {
-                    echo "Full Path: ${env.REPORT_RESULTS_FULL_PATH}"
+                    def todayDate = new Date().format('yyyy-MM-dd')
+                    def full_path = "${mainDir}/${env.REPORT_DIR_NAME_HTM}"
+                    echo "${full_path}"
                 }
             }
         }
