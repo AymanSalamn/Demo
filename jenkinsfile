@@ -50,7 +50,7 @@ pipeline {
         stage ('Set Directory Name'){
             steps {
                 script {
-                    sh """
+                    sh '''
                         # Set Directory name
                         DIR_NAME=$(date +%Y-%m-%d)
                         mkdir -p "$DIR_NAME"
@@ -58,7 +58,7 @@ pipeline {
                         SUB_DIR=${env.REPORT_DIR_NAME_HTML}
                         mkdir -p "$SUB_DIR"
                         cd ..
-                    """
+                    '''
                 }
             }
         }
