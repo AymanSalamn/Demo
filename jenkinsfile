@@ -7,7 +7,7 @@ pipeline {
                 script {
                     // GET current dir 
                     def current_dir = pwd()
-                    sh 'echo ${current_dir}'
+                    sh "echo ${current_dir}"
                 }
             }
         }
