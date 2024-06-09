@@ -22,11 +22,12 @@ command="$pytest_command --alluredir=$results_dir_name"
 $command
 
 
-# Generate Allure Report 
-"$allure_dir"/bin/allure  generate --clean --single-file $results_dir_name -o "${results_dir_name}_html"
+# Generate Allure Report
+report_results_dir_html="${results_dir_name}_html"
+"$allure_dir"/bin/allure  generate --clean --single-file $results_dir_name -o $report_results_dir_html
 
 # Compressed Report Results
-zip -r "${results_dir_name}_html.zip" "${results_dir_name}html"
+zip -r "${report_results_dir_html}.zip" $report_results_dir_html
 
 
 # Set Directory name
@@ -38,7 +39,7 @@ mkdir -p "$SUB_DIR"
 cd ..
 
 # Move Directory
-mv "${results_dir_name}html.zip" "$DIR_NAME/$SUB_DIR"
+mv "${report_results_dir_html}.zip" "$DIR_NAME/$SUB_DIR"
 
 
 printenv
@@ -53,7 +54,7 @@ export AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY"
 export AWS_SECRET_ACCESS_KEY="$AWS_SECRET_KEY"
 
 
-aws s3 cp "$DIR_NAME/$SUB_DIR/${results_dir_name}_html.zip" s3://"$AWS_S3_BUCKET"/"$DIR_NAME"/"$SUB_DIR/"
+aws s3 cp "$DIR_NAME/$SUB_DIR/${report_results_dir_html}.zip" s3://"$AWS_S3_BUCKET"/"$DIR_NAME"/"$SUB_DIR/"
 
 
 
