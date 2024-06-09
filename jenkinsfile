@@ -8,7 +8,7 @@ pipeline {
                     def currentDir = pwd()
                     sh 'wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz'
                     sh 'tar -zxf allure-2.27.0.tgz'
-                    def allure_dir="${current_dir}/allure-2.27.0"
+                    def allure_dir="${currentDir}/allure-2.27.0"
                     sh 'ln -sf ${allure_dir}/bin/allure /usr/bin/allure'
                     def param1Value = params.pytestCommand
                     echo "Parameter 1 value: ${param1Value}"
