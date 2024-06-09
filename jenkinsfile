@@ -1,7 +1,7 @@
 pipeline {
     agent any
-    def paytest_command = params.pytest_command
-    def report_results_dir = params.results_dir_name
+    def paytest_command = params.pytestCommand
+    def report_results_dir = params.resultsDirName
 
 
     stages {
