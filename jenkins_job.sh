@@ -23,10 +23,10 @@ $command
 
 
 # Generate Allure Report 
-"$allure_dir"/bin/allure  generate --clean --single-file $results_dir_name -o report_results_html
+"$allure_dir"/bin/allure  generate --clean --single-file $results_dir_name -o "${results_dir_name}_html"
 
 # Compressed Report Results
-zip -r report_results.zip report_results_html
+zip -r "${results_dir_name}_html.zip" "${results_dir_name}html"
 
 
 # Set Directory name
@@ -38,7 +38,7 @@ mkdir -p "$SUB_DIR"
 cd ..
 
 # Move Directory
-mv report_results.zip "$DIR_NAME/$SUB_DIR"
+mv "${results_dir_name}html.zip" "$DIR_NAME/$SUB_DIR"
 
 
 printenv
@@ -53,7 +53,7 @@ export AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY"
 export AWS_SECRET_ACCESS_KEY="$AWS_SECRET_KEY"
 
 
-aws s3 cp "$DIR_NAME/$SUB_DIR/report_results.zip" s3://"$AWS_S3_BUCKET"/"$DIR_NAME"/"$SUB_DIR/"
+aws s3 cp "$DIR_NAME/$SUB_DIR/${results_dir_name}_html.zip" s3://"$AWS_S3_BUCKET"/"$DIR_NAME"/"$SUB_DIR/"
 
 
 
