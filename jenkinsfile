@@ -14,7 +14,7 @@ pipeline {
                 script {
                     sh 'wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz'
                     sh 'tar -zxf allure-2.27.0.tgz'
-                    def allure_dir="${env.currentDir}/allure-2.27.0"
+                    def allure_dir="${env.CURRENT_DIR}/allure-2.27.0"
                 }
             }
         }
@@ -30,7 +30,7 @@ pipeline {
         stage ('Generate Allure Report') {
             steps {
                 script {
-                    sh '${env.CURRENT_DIR}/allure-2.27.0/bin/allure  generate --clean --single-file ${env.REPORT_DIR_NAME} -o ${env.REPORT_DIR_NAME_HTML}'
+                    sh "${env.CURRENT_DIR}/allure-2.27.0/bin/allure generate --clean --single-file ${env.REPORT_DIR_NAME} -o ${env.REPORT_DIR_NAME_HTML}"
                 }
             }
         }
