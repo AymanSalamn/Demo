@@ -5,15 +5,17 @@ pipeline {
         PYTEST_COMMAND = "${params.pytestCommand}"
         REPORT_DIR_NAME = "${params.resultsDirName}"
         REPORT_DIR_NAME_HTML = "${params.resultsDirName}_html"
-        CURRENT_DIR = "${pwd()}"
+        CURRENT_DIR = ''
     }
 
     stages {
         stage('Install Allure') {
             steps {
                 script {
+                    def current_dir = pwd()
                     sh 'wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz'
-                    sh 'tar -zxf allure-2.27.0.tgz'
+                    sh "tar -zxf allure-2.27.0.tgz -C ${current_dir}"
+                    env.CURRENT_DIR = current_dir
                     def allure_dir="${env.CURRENT_DIR}/allure-2.27.0"
                     sh "ln -sf ${allure_dir}/bin/allure /usr/bin/allure"
                     
