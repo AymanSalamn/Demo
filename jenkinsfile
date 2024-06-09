@@ -5,6 +5,7 @@ pipeline {
         PYTEST_COMMAND = "${params.pytestCommand}"
         REPORT_DIR_NAME = "${params.resultsDirName}"
         REPORT_DIR_NAME_HTML = "${params.resultsDirName}_html"
+        REPORT_RESULTS_FULL_PATH = ""
     }
     stages {
         stage('Install Allure') {
@@ -53,16 +54,23 @@ pipeline {
                     def subDirName = env.REPORT_DIR_NAME_HTML ?: 'default_subdir'
                     def mainDir = todayDate
                     def subDir = "${mainDir}/${subDirName}"
-                    
+                    REPORT_RESULTS_FULL_PATH = subDir
                     echo "Creating main directory: ${mainDir}"
                     echo "Creating subdirectory: ${subDir}"
-                    
                     sh "mkdir -p ${mainDir}"
                     sh "mkdir -p ${subDir}"
                 }
             }
         }
 
+
+        stage ('Upload Results To S3'){
+            steps {
+                script {
+                    echo "Full Path: ${env.REPORT_RESULTS_FULL_PATH}"
+                }
+            }
+        }
         
     }
     
