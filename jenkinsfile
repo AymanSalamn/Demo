@@ -6,7 +6,7 @@ pipeline {
         REPORT_DIR_NAME = "${params.resultsDirName}"
         REPORT_DIR_NAME_HTML = "${params.resultsDirName}_html"
     }
-
+    def DIR_NAME
     stages {
         stage('Install Allure') {
             steps {
@@ -50,15 +50,15 @@ pipeline {
         stage ('Set Directory Name'){
             steps {
                 script {
-                    sh ```
+                    sh """
                         # Set Directory name
                         DIR_NAME=$(date +%Y-%m-%d)
                         mkdir -p "$DIR_NAME"
                         cd "$DIR_NAME"
-                        SUB_DIR=$results_dir_name
+                        SUB_DIR=${env.REPORT_DIR_NAME_HTML}
                         mkdir -p "$SUB_DIR"
                         cd ..
-                    ```
+                    """
                 }
             }
         }
