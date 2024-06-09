@@ -49,7 +49,7 @@ pipeline {
         stage ('Set Directory Name'){
             steps {
                 script {
-                    sh "DIR_NAME=$(date +%Y-%m-%d)"
+                    sh 'DIR_NAME=$(date +%Y-%m-%d)'
                     sh "mkdir -p "$DIR_NAME""
                     sh "cd $DIR_NAME"
                     sh "mkdir -p ${env.REPORT_DIR_NAME_HTML}"
