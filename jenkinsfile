@@ -14,5 +14,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Run Test') {
+            steps {
+                script {
+                    sh "pytest"
+
+                }
+            }
+        
+        }
+        
     }
 }
