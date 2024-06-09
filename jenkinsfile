@@ -1,9 +1,5 @@
 pipeline {
     agent any
-    def paytest_command = params.pytestCommand
-    def report_results_dir = params.resultsDirName
-
-
     stages {
         stage('Install Allure') {
             steps {
@@ -19,6 +15,8 @@ pipeline {
         stage('Run Test') {
             steps {
                 script {
+                    def paytest_command = params.pytestCommand
+                    def report_results_dir = params.resultsDirName
                     sh "${paytest_command} --alluredir=${report_results_dir}"
                 }
             }
