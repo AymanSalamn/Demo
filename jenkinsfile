@@ -1,82 +1,17 @@
 pipeline {
     agent any
+
     stages {
-        stage('Checkout repository') {
+        stage('Install Allure') {
             steps {
                 script {
-                    git 'https://github.com/your/repository.git'
-                }
-            }
-        }
-        stage('Set up Python') {
-            steps {
-                script {
-                    tools {
-                        python '3.9'
-                    }
-                }
-            }
-        }
-        stage('Install Java') {
-            steps {
-                sh 'sudo apt update'
-                sh 'sudo apt install default-jdk -y'
-            }
-        }
-        stage('Download and Install Allure') {
-            steps {
-                sh 'wget https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz'
-                sh 'sudo tar -zxvf allure-2.27.0.tgz -C /opt/'
-                sh 'sudo ln -s /opt/allure-2.27.0/bin/allure /usr/bin/allure'
-                sh 'allure --version'
-            }
-        }
-        stage('Install dependencies') {
-            steps {
-                script {
-                    sh 'python -m pip install --upgrade pip'
-                    sh 'pip install -r requirements.txt'
-                }
-            }
-        }
-        stage('Generate report') {
-            steps {
-                sh 'pytest --alluredir=ReportResultsFilesTest'
-            }
-        }
-        stage('Run Allure command') {
-            steps {
-                sh 'allure generate --clean --single-file ReportResultsFilesTest -o ReportResults'
-            }
-        }
-        stage('Set directory name') {
-            steps {
-                script {
-                    def DIR_NAME = sh(script: 'date +%Y-%m-%d', returnStdout: true).trim()
-                    env.DIR_NAME = DIR_NAME
-                    sh "mkdir -p ${DIR_NAME}"
-                    def SUB_DIR = sh(script: 'date +%H-%M-%S', returnStdout: true).trim()
-                    env.SUB_DIR = SUB_DIR
-                    sh "mkdir -p ${DIR_NAME}/${SUB_DIR}"
-                }
-            }
-        }
-        stage('Compress files') {
-            steps {
-                sh 'zip -r report_results.zip ReportResults'
-            }
-        }
-        stage('Move files to the new directory') {
-            steps {
-                sh 'mv report_results.zip ${env.DIR_NAME}/${env.SUB_DIR}'
-            }
-        }
-        stage('Upload to S3') {
-            steps {
-                script {
-                    withAWS(region: "${env.AWS_REGION}", credentials: [[accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                        s3Upload(bucket: "${env.AWS_S3_BUCKET}", sourceFolder: "${env.DIR_NAME}/${env.SUB_DIR}", targetFolder: "${env.DIR_NAME}/${env.SUB_DIR}")
-                    }
+                    def currentDir = pwd()
+                    sh 'wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz'
+                    sh 'tar -zxf allure-2.27.0.tgz'
+                    def allure_dir="${current_dir}/allure-2.27.0"
+                    sh 'ln -sf ${allure_dir}/bin/allure /usr/bin/allure'
+                    def param1Value = params.pytestCommand
+                    echo "Parameter 1 value: ${param1Value}"
                 }
             }
         }
