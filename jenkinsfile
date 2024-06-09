@@ -7,17 +7,7 @@ pipeline {
                 script {
                     // GET current dir 
                     def current_dir = pwd()
-        
-                    // Define Allure version to install
-                    def allureVersion = '2.27.0'
-                    
-                    // Download Allure tar.gz file
-                    sh "wget -O allure-${allureVersion}.tgz https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${allureVersion}/allure-commandline-${allureVersion}.tgz"
-                    
-                    // Unpack the downloaded file
-                    sh "tar -zxf allure-${allureVersion}.tgz -C ${current_dir}/allure-2.27.0"
-
-                    su 'ls'
+                    sh 'echo ${current_dir}'
                 }
             }
         }
