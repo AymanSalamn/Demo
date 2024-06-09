@@ -5,6 +5,9 @@ pipeline {
         stage('Install Allure') {
             steps {
                 script {
+                    // GET current dir 
+                    def current_dir = pwd()
+        
                     // Define Allure version to install
                     def allureVersion = '2.27.0'
                     
@@ -12,13 +15,9 @@ pipeline {
                     sh "wget -O allure-${allureVersion}.tgz https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/${allureVersion}/allure-commandline-${allureVersion}.tgz"
                     
                     // Unpack the downloaded file
-                    sh "tar -zxf allure-${allureVersion}.tgz -C ./allure-${allureVersion}"
-                    
-                    // Set Allure bin directory in PATH
-                    env.PATH = "${env.PATH}:${env.WORKSPACE}/allure-${allureVersion}/bin"
-                    
-                    // Print Allure version to verify installation
-                    sh "allure --version"
+                    sh "tar -zxf allure-${allureVersion}.tgz -C ${current_dir}"
+
+                    su 'ls'
                 }
             }
         }
