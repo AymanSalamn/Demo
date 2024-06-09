@@ -54,7 +54,7 @@ pipeline {
                         DIR_NAME=$(date +%Y-%m-%d)
                         mkdir -p "$DIR_NAME"
                         cd "$DIR_NAME"
-                        SUB_DIR=${env.REPORT_DIR_NAME_HTML}
+                        SUB_DIR="${env.REPORT_DIR_NAME_HTML}"
                         mkdir -p "$SUB_DIR"
                         cd ..
                     '''
