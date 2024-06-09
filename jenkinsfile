@@ -1,6 +1,12 @@
 pipeline {
     agent any
-    
+
+    environment {
+        PYTEST_COMMAND = "${params.pytestCommand}"
+        REPORT_DIR_NAME = "${params.resultsDirName}"
+        REPORT_DIR_NAME_HTML = "${params.resultsDirName}_html"
+    }
+
     stages {
         stage('Install Allure') {
             steps {
@@ -14,8 +20,22 @@ pipeline {
                 }
             }
         }
-        
-        // Add other stages of your pipeline
+
+        stage('Run Test') {
+            steps {
+                script {
+                    sh "${env.PYTEST_COMMAND} --alluredir=${env.REPORT_DIR_NAME}"
+                }
+            }
+        }
+
+        stage ('Generate Allure Report') {
+            steps {
+                script {
+                    sh "./allure-2.27.0/bin/allure generate --clean --single-file ${env.REPORT_DIR_NAME} -o ${env.REPORT_DIR_NAME_HTML}"
+                }
+            }
+        }
     }
     
     // Add post-build actions if necessary
