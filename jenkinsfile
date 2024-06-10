@@ -64,10 +64,6 @@ pipeline {
 
 
        stage('Upload Results To S3') {
-        environment {
-           
-        }
-
         steps {
             script {
                 def AWS_S3_BUCKET = "pytest-allure-report-results"
