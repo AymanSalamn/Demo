@@ -15,7 +15,7 @@ pipeline {
                     def current_dir = pwd()
                     sh "echo ${current_dir}"
                     sh 'wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz'
-                    sh "tar -zxvf allure-2.27.0.tgz -C ./"
+                    sh "tar -zxf allure-2.27.0.tgz -C ./"
                     sh "./allure-2.27.0/bin/allure --version"
                 }
             }
