@@ -6,7 +6,9 @@ pipeline {
         REPORT_DIR_NAME = "${params.resultsDirName}"
         REPORT_DIR_NAME_HTML = "${params.resultsDirName}_html"
         REPORT_RESULTS_FULL_PATH = ""
-    }
+        AWS_ACCESS_KEY_ID = credentials('aws_access_key')
+        AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
+    }   
     stages {
         stage('Install Allure') {
             steps {
@@ -63,8 +65,7 @@ pipeline {
 
        stage('Upload Results To S3') {
         environment {
-            AWS_ACCESS_KEY_ID = credentials('aws_access_key')
-            AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
+           
         }
 
         steps {
