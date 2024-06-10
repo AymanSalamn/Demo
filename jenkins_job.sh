@@ -39,8 +39,8 @@ AWS_S3_BUCKET="pytest-allure-report-results"
 AWS_REGION="us-east"
 expiry_seconds=3600
 
-export AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY"
-export AWS_SECRET_ACCESS_KEY="$AWS_SECRET_KEY"
+export AWS_ACCESS_KEY_ID='$AWS_ACCESS_KEY'
+export AWS_SECRET_ACCESS_KEY='$AWS_SECRET_KEY'
 
 aws s3 cp "$DIR_NAME/$SUB_DIR/${report_results_dir_html}.zip" s3://"$AWS_S3_BUCKET"/"$DIR_NAME"/"$SUB_DIR/"
 
