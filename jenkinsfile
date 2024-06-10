@@ -63,8 +63,8 @@ pipeline {
 
         stage ('Upload Results To S3'){
             environment {
-                AWS_ACCESS_KEY = credentials('access_key')
-                AWS_SECRET_KEY = credentials('secret_key')
+                AWS_ACCESS_KEY = credentials('aws_access_key')
+                AWS_SECRET_KEY = credentials('aws_secret_key')
             }
 
             steps {
