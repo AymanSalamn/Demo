@@ -26,7 +26,7 @@ pipeline {
         stage('Run Test') {
             steps {
                 script {
-                    sh "/var/lib/jenkins/.local/bin/${env.PYTEST_COMMAND}"
+                    sh "/var/lib/jenkins/.local/bin/${env.PYTEST_COMMAND} --alluredir=${env.REPORT_DIR_NAME}"
                 }
             }
         }
