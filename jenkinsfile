@@ -71,9 +71,9 @@ pipeline {
             script {
                 def AWS_S3_BUCKET = "pytest-allure-report-results"
                 def todayDate = new Date().format('yyyy-MM-dd')
-                def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTML}"
+                def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTML}/${}"
                 sh "mv ${env.REPORT_DIR_NAME_HTML}.zip ${full_path}"
-                sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} aws s3 cp ${full_path}.zip s3://${AWS_S3_BUCKET}/${full_path}/"
+                sh 'AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} aws s3 cp ${full_path}/${env.REPORT_DIR_NAME_HTML}.zip s3://${AWS_S3_BUCKET}/${full_path}/'
             }
         }
     }
