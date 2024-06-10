@@ -61,22 +61,23 @@ pipeline {
         }
 
 
-        stage ('Upload Results To S3'){
-            environment {
-                AWS_ACCESS_KEY = credentials('aws_access_key')
-                AWS_SECRET_KEY = credentials('aws_secret_key')
-            }
+       stage('Upload Results To S3') {
+        environment {
+            AWS_ACCESS_KEY_ID = credentials('aws_access_key')
+            AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
+        }
 
-            steps {
-                script {
-                    def AWS_S3_BUCKET = "pytest-allure-report-results"
-                    def todayDate = new Date().format('yyyy-MM-dd')
-                    def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTML}"
-                    sh "mv ${env.REPORT_DIR_NAME_HTML}.zip ${full_path}"
-                    sh 'AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY AWS_SECRET_ACCESS_KEY=$AWS_SECRET_KEY aws s3 cp 2024-06-10/report_results_json_html/report_results_json_html.zip s3://pytest-allure-report-results/'
-                }
+        steps {
+            script {
+                def AWS_S3_BUCKET = "pytest-allure-report-results"
+                def todayDate = new Date().format('yyyy-MM-dd')
+                def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTML}"
+                sh "mv ${env.REPORT_DIR_NAME_HTML}.zip ${full_path}"
+                sh "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} aws s3 cp ${full_path}.zip s3://${AWS_S3_BUCKET}/${full_path}/"
             }
         }
+    }
+
         
     }
     
