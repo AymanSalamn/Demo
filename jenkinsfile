@@ -74,4 +74,11 @@ pipeline {
     }
     
     // Add post-build actions if necessary
+
+    post {
+        always {
+            // Always clean the workspace regardless of the build result
+            deleteDir()
+        }
+    }
 }
