@@ -7,6 +7,7 @@ pipeline {
         REPORT_DIR_NAME_HTML = "${params.resultsDirName}_html"
         AWS_ACCESS_KEY_ID = credentials('aws_access_key')
         AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
+        AWS_S3_BUCKET = "pytest-allure-report-results"
     }   
     stages {
         stage('Install Allure') {
@@ -65,11 +66,10 @@ pipeline {
        stage('Upload Results To S3') {
         steps {
             script {
-                def AWS_S3_BUCKET = "pytest-allure-report-results"
                 def todayDate = new Date().format('yyyy-MM-dd')
                 def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTML}"
                 sh "mv ${env.REPORT_DIR_NAME_HTML}.zip ${full_path}"
-                sh "aws s3 cp ${full_path}/${env.REPORT_DIR_NAME_HTML}.zip s3://${AWS_S3_BUCKET}/${full_path}/"
+                sh "aws s3 cp ${full_path}/${env.REPORT_DIR_NAME_HTML}.zip s3://${env.AWS_S3_BUCKET}/${full_path}/"
             }
         }
     }
