@@ -19,7 +19,12 @@ pipeline {
             }
         }
         stage ('install all requirements'){
-            pip3 install -r requirements.txt
+            steps{
+                script {
+                    sh "pip3 install -r requirements.txt"
+                }
+            }
+            
         }
 
 
