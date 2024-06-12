@@ -69,7 +69,7 @@ pipeline {
                 def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTML}"
                 sh "mv ${env.REPORT_DIR_NAME_HTML}.zip ${full_path}"
                 sh "aws s3 cp ${full_path}/${env.REPORT_DIR_NAME_HTML}.zip s3://${env.AWS_S3_BUCKET}/${full_path}/"
-                sh "aws s3 presign s3://${env.AWS_S3_BUCKET}/${full_path}/${env.REPORT_DIR_NAME_HTML}.zip --expires-in 3600"
+                sh "aws s3 presign s3://pytest-allure-report-results/2024-06-12/url_sahred_tesing_html/url_sahred_tesing_html.zip --expires-in=1000"
             }
         }
     }
