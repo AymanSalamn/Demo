@@ -2,14 +2,30 @@ pipeline {
     agent any
 
     stages {
-        stage('Get Affected Files') {
+        stage('Checkout') {
+            steps {
+                // Checkout the repository using Git commands
+                sh "git fetch origin +refs/pull/${{ github.event.number }}/merge:"
+                sh "git checkout -qf FETCH_HEAD"
+            }
+        }
+        stage('Get Changed Files') {
             steps {
                 script {
-                    def changedFiles = pullRequest.files.collect {
-                        it.getFilename()
-                    }
-                    sh "echo ${changedFiles}"
+                    // Determine the base commit SHA
+                    def baseCommit = sh(script: "git merge-base HEAD origin/main", returnStdout: true).trim()
+
+                    // Get the list of changed files
+                    def changedFiles = sh(script: "git diff --name-only ${baseCommit} HEAD", returnStdout: true).trim().split('\n')
                     
+                    // Print the changed files
+                    echo "Changed files in this pull request:"
+                    changedFiles.each { file ->
+                        echo file
+                    }
+
+                    // Optionally, save the list to an environment variable or file
+                    env.CHANGED_FILES = changedFiles.join(",")
                 }
             }
         }
