@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         BASE_SHA = "${env.CHANGE_TARGET}"  // Assuming CHANGE_TARGET is set by Jenkins (e.g., from SCM or user input)
-        CURRENT_SHA = env.GIT_COMMIT      // Assuming GIT_COMMIT is set by Jenkins
+        CURRENT_SHA = "${env.GIT_COMMIT}"      // Assuming GIT_COMMIT is set by Jenkins
     }
 
     stages {
