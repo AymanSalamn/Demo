@@ -13,10 +13,19 @@ pipeline {
                 }
             }
         }
+
+        stage('install Requirements'){
+            steps {
+                script {
+                    sh "pip3 install -r requirements.txt"
+                }
+            }
+        }
+
         stage('Run Test') {
             steps {
                 script {
-                    sh "/var/lib/jenkins/.local/bin/pytest"
+                    sh "pytest"
                 }
             }
         }
