@@ -1,1 +1,38 @@
+pipeline {
+    agent any
 
+    stages {
+        stage('Run Tests') {
+            when {
+                beforeAgent true // Run only if a node is available
+                anyOf {
+                    // Run on pull request event
+                    expression {
+                        github.event_name == 'pull_request'
+                    }
+                    // Run on push event to main branch
+                    expression {
+                        github.event_name == 'push' && github.ref == 'refs/heads/main'
+                    }
+                }
+            }
+            steps {
+                script {
+                    // Get changed files for pull requests
+                    def changedFiles = ''
+                    if (github.event_name == 'pull_request') {
+                        changedFiles = sh(script: "git diff --name-only ${env.CHANGE_TARGET} ${env.CHANGE_ID}", returnStdout: true).trim()
+                    }
+                    
+                    // Filter and run tests on relevant files
+                    def testFiles = changedFiles.findAll { it.startsWith('test_') }
+                    if (testFiles) {
+                        sh "pytest ${testFiles.join(' ')}"
+                    } else {
+                        echo "No test files found in the changes."
+                    }
+                }
+            }
+        }
+    }
+}
