@@ -3,19 +3,6 @@ pipeline {
 
     stages {
         stage('Run Tests') {
-            when {
-                beforeAgent true // Run only if a node is available
-                anyOf {
-                    // Run on pull request event
-                    expression {
-                        github.event_name == 'pull_request'
-                    }
-                    // Run on push event to main branch
-                    expression {
-                        github.event_name == 'push' && github.ref == 'refs/heads/main'
-                    }
-                }
-            }
             steps {
                 script {
                     sh "pytest" 
