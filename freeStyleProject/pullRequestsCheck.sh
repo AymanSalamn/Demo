@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Check if the event is a pull request or push to main branch
-if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-    CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
-fi
+#if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+#fi
 
 echo "CHANGED_FILES=$CHANGED_FILES"
 # echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
