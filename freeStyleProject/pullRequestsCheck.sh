@@ -6,7 +6,7 @@ if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
 fi
 
 echo "CHANGED_FILES=$CHANGED_FILES"
-echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
+# echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
 
 # Assuming the script is executed on Ubuntu-latest, perform setup and testing
 echo "Running on Ubuntu-latest"
