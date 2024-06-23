@@ -12,7 +12,7 @@ pipeline {
         stage('Execute Commands') {
             steps {
                 // Replace with your actual commands to be executed
-                sh "pytest"
+                sh "mkdir testing"
             }
         }
         
