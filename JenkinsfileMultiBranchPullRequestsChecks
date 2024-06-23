@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the repository using Git commands
-                sh "git fetch origin +refs/pull/${{ github.event.number }}/merge:"
+                sh "git fetch origin +refs/pull/${github.event.number}/merge:"
                 sh "git checkout -qf FETCH_HEAD"
             }
         }
