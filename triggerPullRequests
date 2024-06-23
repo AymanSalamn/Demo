@@ -1,14 +1,6 @@
 pipeline {
     agent any
     
-    triggers {
-        githubPush()
-        github {
-            eventsByPush(true) // Trigger on push events
-            eventsByPullRequest(true) // Trigger on pull request events
-        }
-    }
-    
     stages {
         stage('Checkout') {
             steps {
@@ -39,6 +31,9 @@ pipeline {
         always {
             // Clean up or post-processing steps can go here
             deleteDir()
+        }
+}
+            
         }
     }
 }
