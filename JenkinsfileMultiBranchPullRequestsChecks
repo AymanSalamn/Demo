@@ -14,20 +14,29 @@ pipeline {
             }
         }
 
-        stage('Fetch Changed Files from PR') {
+        stage('Checkout') {
+            steps {
+                // Checkout the current pull request
+                checkout scm
+            }
+        }
+
+        stage('Get Affected Files') {
             steps {
                 script {
-                    // Assuming the repository is already checked out in the workspace
-                    def prNumber = env.CHANGE_ID  // CHANGE_ID is a Jenkins environment variable for the PR number
+                    // Fetch the PR's base branch to compare changes
+                    def baseBranch = 'origin/main'  // Replace with your main branch
                     
-                    // Fetch the changed files from the PR
-                    def changedFiles = sh(script: "git diff --name-only origin/main...origin/pr/${prNumber}/merge", returnStdout: true).trim()
+                    // Get the list of affected files
+                    def affectedFiles = sh(script: "git diff --name-only $baseBranch...HEAD", returnStdout: true).trim().split('\n')
                     
-                    // Output the changed files
-                    echo "Changed files:\n${changedFiles}"
-                    
-                    // Save changed files into an environment variable for later stages if needed
-                    env.CHANGED_FILES = changedFiles
+                    // Print the list of affected files
+                    echo "Affected files in this pull request:"
+                    affectedFiles.each { file ->
+                        echo file
+                    }
+                    // Optionally, save the list to an environment variable or file
+                    env.AFFECTED_FILES = affectedFiles.join(",")
                 }
             }
         }
