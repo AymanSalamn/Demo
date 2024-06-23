@@ -5,19 +5,7 @@ pipeline {
         stage('Get Changed Files') {
             steps {
                 script {
-                    // Execute Git command to get changed file names
-                    def changedFiles = sh(script: 'git --no-pager diff origin/main --name-only', returnStdout: true).trim()
-                    
-                    // Split the output into an array of file names
-                    def fileList = changedFiles.split('\n')
-                    
-                    // Print each file name
-                    fileList.each { fileName ->
-                        echo "Changed file: ${fileName}"
-                    }
-
-                    // Optionally, save the list to an environment variable or file
-                    env.CHANGED_FILES = fileList.join(',')
+                  sh "git branch -r"
                 }
             }
         }
