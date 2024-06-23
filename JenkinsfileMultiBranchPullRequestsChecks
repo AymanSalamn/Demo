@@ -5,8 +5,11 @@ pipeline {
         stage('Get Affected Files') {
             steps {
                 script {
+                    // Fetch all branches from the remote repository
+                    sh "git fetch --all"
+
                     // Determine the base commit SHA dynamically
-                    def baseCommit = sh(script: "git merge-base HEAD main", returnStdout: true).trim()
+                    def baseCommit = sh(script: "git merge-base HEAD origin/main", returnStdout: true).trim()
 
                     // Get the list of affected files
                     def affectedFiles = sh(script: "git diff --name-only ${baseCommit} HEAD", returnStdout: true).trim().split('\n')
