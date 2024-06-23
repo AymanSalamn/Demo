@@ -1,2 +1,2 @@
-def test_sub():
+def test_sub():s
   assert 40 == (45 - 5)
