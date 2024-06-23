@@ -32,8 +32,6 @@ pipeline {
             // Clean up or post-processing steps can go here
             deleteDir()
         }
-}
+    }
             
         }
-    }
-}
