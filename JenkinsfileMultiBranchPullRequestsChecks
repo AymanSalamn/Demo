@@ -1,17 +1,15 @@
 pipeline {
     agent any
 
-    environment {
-        BASE_SHA = "${env.CHANGE_TARGET}"  // Assuming CHANGE_TARGET is set by Jenkins (e.g., from SCM or user input)
-        CURRENT_SHA = "${env.GIT_COMMIT}"      // Assuming GIT_COMMIT is set by Jenkins
-    }
-
     stages {
         stage('Get Affected Files') {
             steps {
                 script {
+                    // Determine the base commit SHA dynamically
+                    def baseCommit = sh(script: "git merge-base HEAD origin/main", returnStdout: true).trim()
+
                     // Get the list of affected files
-                    def affectedFiles = sh(script: "git diff --name-only ${env.BASE_SHA} ${env.CURRENT_SHA}", returnStdout: true).trim().split('\n')
+                    def affectedFiles = sh(script: "git diff --name-only ${baseCommit} HEAD", returnStdout: true).trim().split('\n')
                     
                     // Print the list of affected files
                     echo "Affected files in this pull request:"
