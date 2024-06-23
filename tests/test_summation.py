@@ -1,2 +1,2 @@
 def test_two_numbers():
-  assert 10 == 10
+  assert 11 == 11
