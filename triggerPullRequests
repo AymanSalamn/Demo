@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    triggers {
+        githubPullRequest {
+            useGitHubHooks()
+        }
+    }
+
     stages {
         stage('Execute Commands') {
             steps {
