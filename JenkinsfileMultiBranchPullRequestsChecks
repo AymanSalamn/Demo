@@ -24,6 +24,9 @@ pipeline {
         stage('Get Affected Files') {
             steps {
                 script {
+
+                    sh "git fetch --all"
+                    
                     // Fetch the PR's base branch to compare changes
                     def baseBranch = 'origin/main'  // Replace with your main branch
                     
