@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // Execute Git command to get changed file names
-                    def changedFiles = sh(script: 'git --no-pager diff --name-only origin/main', returnStdout: true).trim()
+                    def changedFiles = sh(script: 'git --no-pager diff origin/main --name-only', returnStdout: true).trim()
                     
                     // Split the output into an array of file names
                     def fileList = changedFiles.split('\n')
