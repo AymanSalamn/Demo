@@ -35,4 +35,11 @@ pipeline {
             }
         }
     }
+
+    post {
+            always {
+                // Always clean the workspace regardless of the build result
+                deleteDir()
+            }
+        }
 }
