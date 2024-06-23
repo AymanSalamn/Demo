@@ -5,23 +5,11 @@ pipeline {
         stage('Get Affected Files') {
             steps {
                 script {
-                    // Fetch all branches from the remote repository
-                    sh "git fetch --all"
-
-                    // Determine the base commit SHA dynamically
-                    def baseCommit = sh(script: "git merge-base HEAD origin/main", returnStdout: true).trim()
-
-                    // Get the list of affected files
-                    def affectedFiles = sh(script: "git diff --name-only ${baseCommit} HEAD", returnStdout: true).trim().split('\n')
-                    
-                    // Print the list of affected files
-                    echo "Affected files in this pull request:"
-                    affectedFiles.each { file ->
-                        echo file
+                    def changedFiles = pullRequest.files.collect {
+                        it.getFilename()
                     }
-
-                    // Optionally, save the list to an environment variable or file
-                    env.AFFECTED_FILES = affectedFiles.join(",")
+                    sh "echo ${changedFiles}"
+                    
                 }
             }
         }
