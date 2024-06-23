@@ -1,63 +1,28 @@
 pipeline {
     agent any
+
+    environment {
+        BASE_SHA = "${env.CHANGE_TARGET}"  // Assuming CHANGE_TARGET is set by Jenkins (e.g., from SCM or user input)
+        CURRENT_SHA = env.GIT_COMMIT      // Assuming GIT_COMMIT is set by Jenkins
+    }
+
     stages {
-        stage('Install Allure') {
-            steps {
-                script {
-                    // GET current dir 
-                    def current_dir = pwd()
-                    sh "echo ${current_dir}"
-                    sh 'wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz'
-                    sh "tar -zxf allure-2.27.0.tgz -C ./"
-                    sh "./allure-2.27.0/bin/allure --version"
-                }
-            }
-        }
-
-        stage('Checkout') {
-            steps {
-                // Checkout the current pull request
-                checkout scm
-            }
-        }
-
         stage('Get Affected Files') {
             steps {
                 script {
-
-                    sh "git fetch --all"
-                    
-                    // Fetch the PR's base branch to compare changes
-                    def baseBranch = 'origin/main'  // Replace with your main branch
-                    
                     // Get the list of affected files
-                    def affectedFiles = sh(script: "git diff --name-only $baseBranch...HEAD", returnStdout: true).trim().split('\n')
+                    def affectedFiles = sh(script: "git diff --name-only ${env.BASE_SHA} ${env.CURRENT_SHA}", returnStdout: true).trim().split('\n')
                     
                     // Print the list of affected files
                     echo "Affected files in this pull request:"
                     affectedFiles.each { file ->
                         echo file
                     }
+
                     // Optionally, save the list to an environment variable or file
                     env.AFFECTED_FILES = affectedFiles.join(",")
                 }
             }
-        }
-
-        stage('Run Test') {
-            steps {
-                script {
-                    sh "/var/lib/jenkins/.local/bin/pytest"
-                }
-            }
-        }
-    }
-    
-    // Add post-build actions if necessary
-    post {
-        always {
-            // Always clean the workspace regardless of the build result
-            deleteDir()
         }
     }
 }
