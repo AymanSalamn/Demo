@@ -1,20 +1,44 @@
 pipeline {
     agent any
-
-    stages {
-        stage('Run Tests') {
-            steps {
-                script {
-                    sh "pytest" 
-                }
-            }
+    
+    triggers {
+        githubPush()
+        github {
+            eventsByPush(true) // Trigger on push events
+            eventsByPullRequest(true) // Trigger on pull request events
         }
     }
-
-    post {
-            always {
-                // Always clean the workspace regardless of the build result
-                deleteDir()
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from the repository
+                checkout scm
             }
         }
+        
+        stage('Execute Commands') {
+            steps {
+                // Replace with your actual commands to be executed
+                sh "pytest"
+            }
+        }
+        
+        // Add more stages as needed
+    }
+    
+    post {
+        success {
+            echo 'Pipeline executed successfully'
+        }
+        
+        failure {
+            echo 'Pipeline failed'
+        }
+        
+        always {
+            // Clean up or post-processing steps can go here
+            deleteDir()
+        }
+    }
 }
