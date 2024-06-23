@@ -14,6 +14,24 @@ pipeline {
             }
         }
 
+        stage('Fetch Changed Files from PR') {
+            steps {
+                script {
+                    // Assuming the repository is already checked out in the workspace
+                    def prNumber = env.CHANGE_ID  // CHANGE_ID is a Jenkins environment variable for the PR number
+                    
+                    // Fetch the changed files from the PR
+                    def changedFiles = sh(script: "git diff --name-only origin/main...origin/pr/${prNumber}/merge", returnStdout: true).trim()
+                    
+                    // Output the changed files
+                    echo "Changed files:\n${changedFiles}"
+                    
+                    // Save changed files into an environment variable for later stages if needed
+                    env.CHANGED_FILES = changedFiles
+                }
+            }
+        }
+
         stage('Run Test') {
             steps {
                 script {
