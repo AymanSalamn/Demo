@@ -21,7 +21,7 @@ pipeline {
                     sh "git branch -r"
                    
                     // Get the list of changed files between the base branch and the PR branch
-                    def changedFiles = sh(script: "git diff --name-only ${targetBranch} ${sourceBranch}", returnStdout: true).trim()
+                    def changedFiles = sh(script: "git diff --name-only refs/remotes/origin/main ${sourceBranch}", returnStdout: true).trim()
                     
                     // Print the changed files
                     //echo "Changed files:\n${changedFiles}"
