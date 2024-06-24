@@ -14,7 +14,9 @@ pipeline {
                     def targetBranch = 'origin/main' // Replace with your target branch
                     def sourceBranch = env.CHANGE_BRANCH // Jenkins variable for PR source branch
                     // Check the current active branch
-                    sh "git branch"
+                    sh "git fetch origin"
+
+                    sh "git branch -r"
                     // Fetch the base branch to make sure we have the latest changes
                     //sh "git fetch origin"
 
