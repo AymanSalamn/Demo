@@ -34,7 +34,7 @@ pipeline {
                     def sourceBranch = env.ghprbSourceBranch // Jenkins variable for PR source branch
                         
                     // Get the list of changed files between the base branch and the PR branch
-                    def changedFiles = sh(script: "git diff --name-only origin/${targetBranch} ${sourceBranch}", returnStdout: true).trim()
+                    def changedFiles = sh(script: "git diff --name-only origin/${targetBranch} origin/${sourceBranch}", returnStdout: true).trim()
                     
                     // Print the changed files
                     echo "Changed files:\n${changedFiles}"
