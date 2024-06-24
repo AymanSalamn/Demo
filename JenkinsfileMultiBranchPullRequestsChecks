@@ -14,9 +14,6 @@ pipeline {
                     def targetBranch = 'origin/main' // Replace with your target branch
                     def sourceBranch = env.CHANGE_BRANCH // Jenkins variable for PR source branch
 
-                    // add remote
-                    sh "git remote add origin https://github.com/AymanSalamn/Demo.git"
-
                     // fetch the data
                     sh "git fetch origin"
                     
