@@ -13,7 +13,7 @@ pipeline {
                     echo "Changed files:\n${changedFiles}"
 
                     def test_effected_files = []
-                    def files = changedFiles.split('\n')
+                    def files = changedFiles.split('/')
                     files.each { file ->
                       echo "File: ${file}"
                       if (file.startsWith("test_")) {
@@ -23,7 +23,6 @@ pipeline {
                     }
 
                     if(test_effected_files){
-                        echo "We Are in IF Statment"
                         test_files_changed = test_effected_files.join(' ')
                         sh "/var/lib/jenkins/.local/bin/pytest test_files_changed"
                     }
