@@ -1,25 +1,42 @@
+
+
 pipeline {
     agent any
-    stages {
-        stage('Get Changed Files & Run Tests') {
-            steps {
-                script {
-                    // Fetch Data
-                    sh "git fetch --all"
 
-                    // Get the list of changed files between the base branch and the PR branch
-                    def changedFiles = sh(script: "git diff --name-only origin/${env.ghprbTargetBranch} origin/${env.ghprbSourceBranch}", returnStdout: true).trim()
-                    echo "Changed files:\n${changedFiles}"
+    environment {
+        CHANGED_FILES = """file1.txt
+                            test_file2.js
+                            config.yaml
+                            test_file3.py"""
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+            }
+        }
+        
+        stage('Test') {
+            when {
+                expression {
+                    // Split the CHANGED_FILES environment variable into a list of files
+                    def files = env.CHANGED_FILES.split('\n')
+                    // Check if any file contains the 'test' keyword
+                    def testFiles = files.findAll { it.contains("test") }
+                    // Only proceed with the stage if there are test files
+                    return !testFiles.isEmpty()
                 }
             }
-        }    
-    }
-    
-    // Add post-build actions if necessary
-    post {
-        always {
-            // Always clean the workspace regardless of the build result
-            deleteDir()
+            steps {
+                echo 'Running tests...'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+            }
         }
     }
 }
