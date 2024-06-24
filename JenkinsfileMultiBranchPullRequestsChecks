@@ -15,22 +15,17 @@ pipeline {
             when {
                 expression {
                     // Split the CHANGED_FILES environment variable into a list of files
-                    def files = env.CHANGED_FILES.split('/')
+                    def files = env.CHANGED_FILES.split('\n')
                     // Check if any file contains the 'test' keyword
                     def testFiles = files.findAll { it.contains("test") }
                     // Only proceed with the stage if there are test files
+                    testFiles = testFiles.join(' ')
                     echo "testFiles: ${testFiles}"
                     return !testFiles.isEmpty()
                 }
             }
             steps {
                 echo 'Running tests...'
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                echo 'Deploying...'
             }
         }
     }
