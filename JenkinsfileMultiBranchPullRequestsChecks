@@ -14,6 +14,9 @@ pipeline {
                     def targetBranch = 'origin/main' // Replace with your target branch
                     def sourceBranch = env.CHANGE_BRANCH // Jenkins variable for PR source branch
 
+                    // add remote
+                    sh "git remote add origin https://github.com/AymanSalamn/Demo.git"
+
                     // fetch the data
                     sh "git fetch origin"
                     
@@ -21,7 +24,7 @@ pipeline {
                     sh "git branch -r"
                    
                     // Get the list of changed files between the base branch and the PR branch
-                    def changedFiles = sh(script: "git diff --name-only refs/remotes/origin/main ${sourceBranch}", returnStdout: true).trim()
+                    def changedFiles = sh(script: "git diff --name-only origin/main ${sourceBranch}", returnStdout: true).trim()
                     
                     // Print the changed files
                     //echo "Changed files:\n${changedFiles}"
