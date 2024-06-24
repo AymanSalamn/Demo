@@ -28,7 +28,7 @@ pipeline {
                     sh "git fetch --all"
 
                     def targetBranch = env.ghprbTargetBranch // Replace with your target branch
-                    def sourceBranch = env.GIT_BRANCH // Jenkins variable for PR source branch
+                    def sourceBranch = env.ghprbSourceBranch // Jenkins variable for PR source branch
                         
                     // Get the list of changed files between the base branch and the PR branch
                     def changedFiles = sh(script: "git diff --name-only origin/${targetBranch} ${sourceBranch}", returnStdout: true).trim()
