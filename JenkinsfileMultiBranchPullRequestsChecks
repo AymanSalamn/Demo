@@ -27,6 +27,9 @@ pipeline {
                     // Fetch Data
                     sh "git fetch --all"
 
+                    // GET All Branches
+                    sh "git branch -r"
+                    
                     def targetBranch = env.ghprbTargetBranch // Replace with your target branch
                     def sourceBranch = env.ghprbSourceBranch // Jenkins variable for PR source branch
                         
