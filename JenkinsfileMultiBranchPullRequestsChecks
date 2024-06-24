@@ -15,7 +15,7 @@ pipeline {
             when {
                 expression {
                     // Split the CHANGED_FILES environment variable into a list of files
-                    def files = env.CHANGED_FILES.split('\n')
+                    def files = env.CHANGED_FILES.split('/')
                     // Check if any file contains the 'test' keyword
                     def testFiles = files.findAll { it.contains("test") }
                     // Only proceed with the stage if there are test files
