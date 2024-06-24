@@ -1,19 +1,54 @@
 pipeline {
     agent any
     stages {
-        stage('Checkout') {
+        stage('Install Allure') {
             steps {
-                // Checkout the code from the repository
-                checkout scm
+                script {
+                    // GET current dir 
+                    def current_dir = pwd()
+                    sh "echo ${current_dir}"
+                    sh 'wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz'
+                    sh "tar -zxf allure-2.27.0.tgz -C ./"
+                    sh "./allure-2.27.0/bin/allure --version"
+                }
             }
         }
+        stage('Run Test') {
+            steps {
+                script {
+                    sh "/var/lib/jenkins/.local/bin/pytest"
+                }
+            }
+        }
+
         stage('Get Changed Files') {
             steps {
                 script {
-                    // Get the base branch (e.g., master or main) and the PR branch
-                    sh "git branch -r"
+                    def targetBranch = env.ghprbTargetBranch // Replace with your target branch
+                    def sourceBranch = env.GIT_BRANCH // Jenkins variable for PR source branch
+                        
+                    // Get the list of changed files between the base branch and the PR branch
+                    def changedFiles = sh(script: "git diff --name-only ${targetBranch} ${sourceBranch}", returnStdout: true).trim()
+                    
+                    // Print the changed files
+                    echo "Changed files:\n${changedFiles}"
+                    
+                    // Optionally, split and use the list of files
+                    def files = changedFiles.split('\n')
+                    files.each { file ->
+                      echo "File: ${file}"
+                    }
+                    
                 }
             }
+        }
+    }
+    
+    // Add post-build actions if necessary
+    post {
+        always {
+            // Always clean the workspace regardless of the build result
+            deleteDir()
         }
     }
 }
