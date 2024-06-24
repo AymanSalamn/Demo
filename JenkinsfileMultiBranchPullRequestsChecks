@@ -8,7 +8,9 @@ pipeline {
                     sh "git fetch --all"
                     // Get the list of changed files between the base branch and the PR branch
                     def changedFiles = sh(script: "git diff --name-only origin/${env.ghprbTargetBranch} origin/${env.ghprbSourceBranch}", returnStdout: true).trim()
+                    echo "changed files: ${changedFiles}"
                     def files = env.CHANGED_FILES.split('\n')
+                    echo "files: ${files}"
                     def testFiles = files.findAll { it.contains("test") }
                     if (testFiles){
                         testFiles = testFiles.collect { it.trim() }.join(' ')
