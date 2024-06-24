@@ -13,21 +13,22 @@ pipeline {
                     // Get the base branch (e.g., master or main) and the PR branch
                     def targetBranch = 'origin/main' // Replace with your target branch
                     def sourceBranch = env.CHANGE_BRANCH // Jenkins variable for PR source branch
-
+                    // Check the current active branch
+                    sh "git branch"
                     // Fetch the base branch to make sure we have the latest changes
-                    sh "git fetch origin"
+                    //sh "git fetch origin"
 
                     // Get the list of changed files between the base branch and the PR branch
-                    def changedFiles = sh(script: "git diff --name-only ${targetBranch}...${sourceBranch}", returnStdout: true).trim()
+                    //def changedFiles = sh(script: "git diff --name-only ${targetBranch}...${sourceBranch}", returnStdout: true).trim()
                     
                     // Print the changed files
-                    echo "Changed files:\n${changedFiles}"
+                    //echo "Changed files:\n${changedFiles}"
                     
                     // Optionally, split and use the list of files
-                    def files = changedFiles.split('\n')
-                    files.each { file ->
-                        echo "File: ${file}"
-                    }
+                    //def files = changedFiles.split('\n')
+                    //files.each { file ->
+                      //  echo "File: ${file}"
+                    //}
                 }
             }
         }
