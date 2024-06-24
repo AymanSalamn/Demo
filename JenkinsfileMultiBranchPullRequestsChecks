@@ -9,11 +9,15 @@ pipeline {
 
                     // Get the list of changed files between the base branch and the PR branch
                     def changedFiles = sh(script: "git diff --name-only origin/${env.ghprbTargetBranch} origin/${env.ghprbSourceBranch}", returnStdout: true).trim()
-                    
                     echo "Changed files:\n${changedFiles}"
 
                     def test_effected_files = []
-                    def files = changedFiles.split('\n').collect { it.trim() }
+                    def files2 = changedFiles.split('/')
+                    files2.each { file ->
+                      echo "File: ${files2}"
+                    }
+
+                    def files = changedFiles.split('\n').collect {it.trim()}
                     echo "Files: ${files}"
                 }
             }
