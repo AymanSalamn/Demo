@@ -10,8 +10,10 @@ pipeline {
                     def changedFiles = sh(script: "git diff --name-only origin/${env.ghprbTargetBranch} origin/${env.ghprbSourceBranch}", returnStdout: true).trim()
                     def files = env.CHANGED_FILES.split('\n')
                     def testFiles = files.findAll { it.contains("test") }
-                    testFiles = testFiles.collect { it.trim() }.join(' ')
-                    ""
+                    if (testFiles){
+                        testFiles = testFiles.collect { it.trim() }.join(' ')
+                        sh "/var/lib/jenkins/.local/bin/pytest ${testFiles}"
+                    }
                 }
             }
         }    
