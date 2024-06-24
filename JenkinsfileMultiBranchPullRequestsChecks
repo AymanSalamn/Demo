@@ -4,19 +4,13 @@ pipeline {
     agent any
 
     environment {
-        CHANGED_FILES = """file1.txt
-                            test_file2.js
-                            config.yaml
-                            test_file3.py"""
+        CHANGED_FILES = """add/file1.txt
+                            tests/ams/files/test_file2.js
+                            not/config.yaml
+                            notaddong/test_file3.py"""
     }
 
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building...'
-            }
-        }
-        
+    stages { 
         stage('Test') {
             when {
                 expression {
@@ -25,6 +19,7 @@ pipeline {
                     // Check if any file contains the 'test' keyword
                     def testFiles = files.findAll { it.contains("test") }
                     // Only proceed with the stage if there are test files
+                    echo "testFiles: ${testFiles}"
                     return !testFiles.isEmpty()
                 }
             }
