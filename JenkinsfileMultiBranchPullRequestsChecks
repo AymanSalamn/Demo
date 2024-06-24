@@ -14,23 +14,7 @@ pipeline {
 
                     def test_effected_files = []
                     def files = changedFiles.split('\n').collect { it.trim() }
-                    def testFiles = []
-
-                    files.each { file ->
-                      echo "File: ${file}"
-                      // Check if the full path contains 'test'
-                      if (file.contains("test")) {
-                        testFiles << file
-                          }
-                    }
-                
-                    // If there are test files, join them into a single string and print
-                    if (testFiles) {
-                      def testChangedFiles = testFiles.join(' ')
-                      echo "test_changed_files=${testChangedFiles}"
-                    } else {
-                      echo "No files contain 'test' in their path."
-                    }
+                    echo "Files: ${files}"
                 }
             }
         }    
