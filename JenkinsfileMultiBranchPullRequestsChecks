@@ -13,10 +13,10 @@ pipeline {
                     echo "Changed files:\n${changedFiles}"
 
                     def test_effected_files = []
-                    def files = changedFiles.split('/')
+                    
                     files.each { file ->
                       echo "File: ${file}"
-                      if (file.startsWith("test_")) {
+                      if (file.contains("test_")) {
                             test_effected_files << file
                       }
                       echo "test_effected_files: ${test_effected_files}"  
