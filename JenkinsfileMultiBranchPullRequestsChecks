@@ -19,8 +19,11 @@ pipeline {
                       if (file.startsWith("test_")) {
                             test_effected_files << file
                       }
+                      echo "test_effected_files: ${test_effected_files}"  
                     }
+
                     if(test_effected_files){
+                        echo "We Are in IF Statment"
                         test_files_changed = test_effected_files.join(' ')
                         sh "/var/lib/jenkins/.local/bin/pytest test_files_changed"
                     }
