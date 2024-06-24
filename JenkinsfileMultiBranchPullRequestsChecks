@@ -15,6 +15,7 @@ pipeline {
                     def test_effected_files = []
                     def files = changedFiles.split('\n')
                     files.each { file ->
+                      echo "File: ${file}"
                       if (file.startsWith("test_")) {
                             test_effected_files << file
                       }
