@@ -19,7 +19,7 @@ pipeline {
                     // Check if any file contains the 'test' keyword
                     def testFiles = files.findAll { it.contains("test") }
                     // Only proceed with the stage if there are test files
-                    testFiles = testFiles.join(' ')
+                    testFiles = testFiles.collect { it.trim() }.join(' ')
                     echo "testFiles: ${testFiles}"
                     return !testFiles.isEmpty()
                 }
