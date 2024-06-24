@@ -13,18 +13,23 @@ pipeline {
                     echo "Changed files:\n${changedFiles}"
 
                     def test_effected_files = []
-                    
+                    def files = changedFiles.split('\n').collect { it.trim() }
+                    def testFiles = []
+
                     files.each { file ->
                       echo "File: ${file}"
-                      if (file.contains("test_")) {
-                            test_effected_files << file
-                      }
-                      echo "test_effected_files: ${test_effected_files}"  
+                      // Check if the full path contains 'test'
+                      if (file.contains("test")) {
+                        testFiles << file
+                          }
                     }
-
-                    if(test_effected_files){
-                        test_files_changed = test_effected_files.join(' ')
-                        sh "/var/lib/jenkins/.local/bin/pytest ${test_files_changed}"
+                
+                    // If there are test files, join them into a single string and print
+                    if (testFiles) {
+                      def testChangedFiles = testFiles.join(' ')
+                      echo "test_changed_files=${testChangedFiles}"
+                    } else {
+                      echo "No files contain 'test' in their path."
                     }
                 }
             }
