@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    environment {
-        TEST_FILES = ''
-    }
     stages {
         
         stage('Update Build Name & Description') {
