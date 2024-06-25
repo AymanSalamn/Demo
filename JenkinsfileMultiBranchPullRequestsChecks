@@ -17,18 +17,11 @@ pipeline {
                     // Fetch Data
                     sh "git fetch --all"
                     // Get the list of changed files between the base branch and the PR branch
-                    def changedFiles = sh(script: "git diff --name-only origin/${env.ghprbTargetBranch} origin/${env.ghprbSourceBranch}", returnStdout: true).trim()
-                    echo "Changed files: ${changedFiles}"
-                    def files = changedFiles.split('\n')
-                    echo "Files: ${files}"
-                    def testFiles = files.findAll { it.contains("test") }
-                    if (testFiles) {
-                        echo "test Files Before Set The Env: ${testFiles}"
-                        env.TEST_FILES = testFiles.collect { it.trim() }.join(' ')
-                        echo "Test files: ${env.TEST_FILES}"
-                    } else {
-                        echo "No test files found"
-                    }
+                    def changedFilesBetweenBranches = sh(script: "git diff --name-only origin/${env.ghprbTargetBranch} origin/${env.ghprbSourceBranch}", returnStdout: true).trim().split('\n')
+                    def changedTestFiles = changedFilesBetweenBranches.findAll { it.contains("test") }
+                    if (changedTestFiles) {
+                        env.TEST_FILES = changedTestFiles.collect { it.trim() }.join(' ')
+                    } 
                 }
             }
         }
