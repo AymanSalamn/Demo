@@ -1,27 +1,53 @@
 pipeline {
     agent any
+    environment {
+        TEST_FILES = ''
+    }
     stages {
-        stage('Get Changed Files & Run Tests') {
+        
+        stage('Update Build Name & Description') {
+            steps {
+                script {
+                    currentBuild.displayName = "${env.ghprbPullTitle}"
+                    currentBuild.description = "Build triggered by pull request ${env.ghprbPullId}"
+                }
+            }
+        }
+
+        stage('Get Changed Files') {
             steps {
                 script {
                     // Fetch Data
                     sh "git fetch --all"
                     // Get the list of changed files between the base branch and the PR branch
                     def changedFiles = sh(script: "git diff --name-only origin/${env.ghprbTargetBranch} origin/${env.ghprbSourceBranch}", returnStdout: true).trim()
-                    echo "changed files: ${changedFiles}"
+                    echo "Changed files: ${changedFiles}"
                     def files = changedFiles.split('\n')
-                    echo "files: ${files}"
+                    echo "Files: ${files}"
                     def testFiles = files.findAll { it.contains("test") }
-                    if (testFiles){
-                        testFiles = testFiles.collect { it.trim() }.join(' ')
-                        sh "/var/lib/jenkins/.local/bin/pytest ${testFiles}"
+                    if (testFiles) {
+                        env.TEST_FILES = testFiles.collect { it.trim() }.join(' ')
+                        echo "Test files: ${env.TEST_FILES}"
+                    } else {
+                        echo "No test files found"
                     }
                 }
             }
-        }    
+        }
+
+        stage('Run Tests') {
+            when {
+                expression { return env.TEST_FILES?.trim() }
+            }
+            steps {
+                script {
+                    echo "Running tests for files: ${env.TEST_FILES}"
+                    sh "/var/lib/jenkins/.local/bin/pytest ${env.TEST_FILES}"
+                }
+            }
+        }
     }
     
-    // Add post-build actions if necessary
     post {
         always {
             // Always clean the workspace regardless of the build result
