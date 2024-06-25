@@ -26,6 +26,7 @@ pipeline {
                     echo "Files: ${files}"
                     def testFiles = files.findAll { it.contains("test") }
                     if (testFiles) {
+                        echo "test Files Before Set The Env: ${testFiles}"
                         env.TEST_FILES = testFiles.collect { it.trim() }.join(' ')
                         echo "Test files: ${env.TEST_FILES}"
                     } else {
