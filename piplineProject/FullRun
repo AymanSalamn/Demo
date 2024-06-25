@@ -10,6 +10,15 @@ pipeline {
         AWS_S3_BUCKET = "pytest-allure-report-results"
     }   
     stages {
+
+        stage('Install Requirements'){
+            steps {
+                script {
+                    sh "pip3 install -r requirements.txt"
+                }
+            }
+        }
+
         stage('Install Allure') {
             steps {
                 script {
