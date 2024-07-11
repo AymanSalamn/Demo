@@ -1,27 +1,26 @@
 pipeline {
     agent any
     stages {
-        stage('Print Hello') {
-            when {
-                branch 'PR-*'
-            }
+        stage('Build') {
             steps {
-                script {
-                    sh "git branch -r"
-                    echo "Pull request branch name: ${env.CHANGE_BRANCH}"
-                    echo "Pull request number: ${env.CHANGE_ID}"
-                    sh "git diff --name-only origin/main origin/PR-${env.CHANGE_ID}"
-                    sh "git diff --name-only origin/main origin/${env.CHANGE_BRANCH}"
-                   
+                // Your build steps here
+            }
+            post {
+                success {
+                    // Update GitHub PR status on success
+                    script {
+                        currentBuild.result = 'SUCCESS'
+                        githubNotify context: 'Jenkins', description: 'Build successful', state: 'SUCCESS'
+                    }
+                }
+                failure {
+                    // Update GitHub PR status on failure
+                    script {
+                        currentBuild.result = 'FAILURE'
+                        githubNotify context: 'Jenkins', description: 'Build failed', state: 'FAILURE'
+                    }
                 }
             }
-        }
-    }
-    
-    post {
-        always {
-            // Always clean the workspace regardless of the build result
-            deleteDir()
         }
     }
 }
