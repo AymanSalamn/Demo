@@ -8,7 +8,9 @@ pipeline {
             steps {
                 script {
                     sh "git branch -r"
+                    echo "Pull request branch name: ${env.CHANGE_BRANCH}"
                     echo "Running tests for files"
+                    sh "git diff --name-only origin/main origin/${env.CHANGE_BRANCH}"
                 }
             }
         }
