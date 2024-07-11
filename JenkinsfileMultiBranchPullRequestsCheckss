@@ -10,7 +10,7 @@ pipeline {
                     sh "git branch -r"
                     echo "Pull request branch name: ${env.CHANGE_BRANCH}"
                     echo "Pull request number: ${env.CHANGE_ID}"
-                    sh "git diff --name-only origin/main origin/${env.CHANGE_ID}"
+                    sh "git diff --name-only origin/main origin/PR-${env.CHANGE_ID}"
                     sh "git diff --name-only origin/main origin/${env.CHANGE_BRANCH}"
                    
                 }
