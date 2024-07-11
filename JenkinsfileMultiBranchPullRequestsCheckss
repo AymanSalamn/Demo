@@ -1,26 +1,68 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
+        
+        stage('Update Build Name & Description') {
+            when {
+                branch 'PR-*'
+            }
             steps {
-                // Your build steps here
-            }
-            post {
-                success {
-                    // Update GitHub PR status on success
-                    script {
-                        currentBuild.result = 'SUCCESS'
-                        githubNotify context: 'Jenkins', description: 'Build successful', state: 'SUCCESS'
-                    }
-                }
-                failure {
-                    // Update GitHub PR status on failure
-                    script {
-                        currentBuild.result = 'FAILURE'
-                        githubNotify context: 'Jenkins', description: 'Build failed', state: 'FAILURE'
-                    }
+                script {
+                    currentBuild.displayName = "${env.CHANGE_BRANCH}"
                 }
             }
+        }
+
+        stage('Install Requirements'){
+            when {
+                branch 'PR-*'
+            }
+            steps {
+                script {
+                    sh "pip3 install -r requirements.txt"
+                }
+            }
+        }
+
+        stage('Get Changed Files') {
+            when {
+                branch 'PR-*'
+            }
+            steps {
+                script {
+                    def changedFilesBetweenBranches = sh(script: "git diff --name-only origin/main origin/PR-${env.CHANGE_ID}", returnStdout: true).trim().split('\n')
+                    def changedTestFiles = changedFilesBetweenBranches.findAll { it.contains("test") }
+                    if (changedTestFiles) {
+                        env.TEST_FILES = changedTestFiles.collect { it.trim() }.join(' ')
+                    } 
+                }
+            }
+        }
+
+        stage('Run Test') {
+            when {
+               allOf {
+                    branch 'PR-*'
+                    expression { return env.TEST_FILES?.trim() }
+                }
+            }
+            steps {
+                script {
+                    sh "git branch -r"
+                    echo "Pull request branch name: ${env.CHANGE_BRANCH}"
+                    echo "Pull request number: ${env.CHANGE_ID}"
+                    sh "git diff --name-only origin/main origin/PR-${env.CHANGE_ID}"
+                    echo "Running tests for files: ${env.TEST_FILES}"
+                    sh "/var/lib/jenkins/.local/bin/pytest ${env.TEST_FILES}"
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Always clean the workspace regardless of the build result
+            deleteDir()
         }
     }
 }
