@@ -1,1 +1,22 @@
-
+pipeline {
+    agent any
+    stages {
+        stage('Print Hello') {
+            when {
+                branch 'PR-*'
+            }
+            steps {
+                script {
+                    echo "Running tests for files"
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Always clean the workspace regardless of the build result
+            deleteDir()
+        }
+    }
+}
