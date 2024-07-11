@@ -13,6 +13,19 @@ pipeline {
             }
         }
     }
+
+    post {
+        success {
+            script {
+                updateGithubPRStatus("success", "Build successful")
+            }
+        }
+        failure {
+            script {
+                updateGithubPRStatus("failure", "Build failed")
+            }
+        }
+    }
 }
 
 def updateGithubPRStatus(String state, String description) {
@@ -23,9 +36,9 @@ def updateGithubPRStatus(String state, String description) {
     def url = "https://api.github.com/repos/${repo}/statuses/${sha}"
 
     def payload = [
-        state       : "Done",
-        description : "description",
-        context     : "Jenkins CI"
+        state: state,
+        description:description,
+        context:"Jenkins CI"
     ]
 
     sh """
