@@ -2,32 +2,44 @@ pipeline {
     agent any
     
     stages {
-        stage('Test') {
+        stage('Build') {
             steps {
-                // Your test steps
-                echo "Testing"
+                // Your build steps here
             }
         }
+        stage('Test') {
+            steps {
+                // Your test steps here
+            }
+        }
+        // Add more stages as needed
     }
     
     post {
         success {
             script {
-                githubCommitStatus(
-                    context: 'Jenkins',
-                    state: 'success',
-                    description: 'Custom message for successful build!'
-                )
+                currentBuild.result = 'SUCCESS' // Set build status to SUCCESS
+                setBuildStatus('SUCCESS') // Update build status
             }
         }
         failure {
             script {
-                githubCommitStatus(
-                    context: 'Jenkins',
-                    state: 'failure',
-                    description: 'Custom message for failed build!'
-                )
+                currentBuild.result = 'FAILURE' // Set build status to FAILURE
+                setBuildStatus('FAILURE') // Update build status
             }
         }
+        unstable {
+            script {
+                currentBuild.result = 'UNSTABLE' // Set build status to UNSTABLE
+                setBuildStatus('UNSTABLE') // Update build status
+            }
+        }
+        aborted {
+            script {
+                currentBuild.result = 'ABORTED' // Set build status to ABORTED
+                setBuildStatus('ABORTED') // Update build status
+            }
+        }
+        // Add more post actions as needed
     }
 }
