@@ -2,37 +2,63 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Test') {
+        stage('Build') {
             steps {
                 script {
-                    // Your test steps here
-                    echo 'Testing...'
-                    // Update commit status after tests
-                    commitStatus {
-                        context('Test Stage')
-                        message('Tests completed successfully')
-                        status('SUCCESS')
-                        targetUrl('http://your.jenkins.url/job/${env.JOB_NAME}/')
-                        description('Tests completed')
+                    // Checkout code
+                    checkout scm
+
+                    // Set pending status
+                    setBuildStatus("PENDING", "CI/CD Jenkins - Pull Request Check - In Progress")
+
+                    // Run build
+                    try {
+                        // Simulate build step
+                        sh 'echo "Building..."'
+
+                        // Set success status
+                        setBuildStatus("SUCCESS", "CI/CD Jenkins - Pull Request Check - Success")
+                    } catch (Exception e) {
+                        // Set failure status
+                        setBuildStatus("FAILURE", "CI/CD Jenkins - Pull Request Check - Failed")
+                        throw e
                     }
                 }
             }
         }
     }
+}
 
-    post {
-        always {
-            // Example of setting final status
-            script {
-                commitStatus {
-                    context('Jenkins Pipeline')
-                    message('Pipeline completed')
-                    status('SUCCESS')
-                    targetUrl('http://your.jenkins.url/job/${env.JOB_NAME}/')
-                    description('Pipeline run completed')
-                }
-            }
-        }
+def setBuildStatus(String status, String message) {
+    def context = 'CI/CD Jenkins - Pull Request Check'
+    def gitCommit = env.GIT_COMMIT
+    def gitRepo = scm.userRemoteConfigs[0].url
+    def gitHubUrl = "${gitRepo.replace('.git', '')}/statuses/${gitCommit}"
+
+    def statusMap = [
+        "PENDING": "pending",
+        "SUCCESS": "success",
+        "FAILURE": "failure",
+        "ERROR": "error"
+    ]
+
+    def postBody = [
+        "state": statusMap[status],
+        "context": context,
+        "description": message,
+        "target_url": "${env.BUILD_URL}"
+    ]
+
+    def response = httpRequest(
+        acceptType: 'APPLICATION_JSON',
+        contentType: 'APPLICATION_JSON',
+        httpMode: 'POST',
+        requestBody: groovy.json.JsonOutput.toJson(postBody),
+        url: gitHubUrl,
+        authentication: 'github-credentials'
+    )
+
+    if (response.status != 201) {
+        error "Failed to set GitHub status: ${response.content}"
     }
 }
