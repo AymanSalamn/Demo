@@ -1,59 +1,38 @@
 pipeline {
     agent any
 
-    environment {
-        GITHUB_TOKEN = credentials('github-token-id') // Replace with your Jenkins credential ID
-    }
-
     stages {
-        stage('Test') {
-            when {
-                branch 'PR-*'
-            }
 
+        stage('Test') {
             steps {
-                // Your test steps here
-                echo 'Testing...'
+                script {
+                    // Your test steps here
+                    echo 'Testing...'
+                    // Update commit status after tests
+                    commitStatus {
+                        context('Test Stage')
+                        message('Tests completed successfully')
+                        status('SUCCESS')
+                        targetUrl('http://your.jenkins.url/job/${env.JOB_NAME}/')
+                        description('Tests completed')
+                    }
+                }
             }
         }
     }
 
     post {
-        success {
-            script {
-                updateGithubPRStatus("success", "Build successful")
-            }
-        }
-        failure {
-            script {
-                updateGithubPRStatus("failure", "Build failed")
-            }
-        }
-
         always {
-            // Always clean the workspace regardless of the build result
-            deleteDir()
+            // Example of setting final status
+            script {
+                commitStatus {
+                    context('Jenkins Pipeline')
+                    message('Pipeline completed')
+                    status('SUCCESS')
+                    targetUrl('http://your.jenkins.url/job/${env.JOB_NAME}/')
+                    description('Pipeline run completed')
+                }
+            }
         }
     }
-}
-
-def updateGithubPRStatus(String state, String description) {
-    def repo = 'AymanSalamn/Demo' // e.g., "user/repo"
-    def prNumber = env.CHANGE_ID // Jenkins environment variable for PR number
-    def sha = env.GIT_COMMIT // Jenkins environment variable for the commit SHA
-
-    def url = "https://api.github.com/repos/${repo}/statuses/${sha}"
-
-    def payload = [
-        state: state,
-        description:description,
-        context:"Jenkins CI"
-    ]
-
-    sh """
-        curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-        -H "Content-Type: application/json" \
-        -d '${groovy.json.JsonOutput.toJson(payload)}' \
-        ${url}
-    """
 }
