@@ -38,7 +38,8 @@ def updateGithubPRStatus(String state, String description) {
     def payload = [
         state: state,
         description:description,
-        context:"Jenkins CI"
+        context:"Jenkins CI/CD Pull Request Check",
+        target_url: env.BUILD_URL
     ]
 
     sh """
