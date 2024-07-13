@@ -1,50 +1,51 @@
 pipeline {
     agent any
-    
+
+    environment {
+        GITHUB_TOKEN = credentials('github-token-id') // Replace with your Jenkins credential ID
+    }
+
     stages {
         stage('Test') {
             steps {
                 // Your test steps here
-                echo "Testing"
+                echo 'Testing...'
             }
         }
     }
-    
+
     post {
         success {
             script {
-                currentBuild.result = 'SUCCESS' // Set build status to SUCCESS
-                setBuildStatus('SUCCESS') // Update build status
+                updateGithubPRStatus("success", "Build successful")
             }
         }
         failure {
             script {
-                currentBuild.result = 'FAILURE' // Set build status to FAILURE
-                setBuildStatus('FAILURE') // Update build status
+                updateGithubPRStatus("failure", "Build failed")
             }
         }
-        unstable {
-            script {
-                currentBuild.result = 'UNSTABLE' // Set build status to UNSTABLE
-                setBuildStatus('UNSTABLE') // Update build status
-            }
-        }
-        aborted {
-            script {
-                currentBuild.result = 'ABORTED' // Set build status to ABORTED
-                setBuildStatus('ABORTED') // Update build status
-            }
-        }
-        // Add more post actions as needed
     }
 }
 
-void setBuildStatus(String message, String state) {
-  step([
-      $class: "GitHubCommitStatusSetter",
-      reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/AymanSalamn/Demo"],
-      contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "Add New Status"],
-      errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-      statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
-  ]);
+def updateGithubPRStatus(String state, String description) {
+    def repo = 'AymanSalamn/Demo' // e.g., "user/repo"
+    def prNumber = env.CHANGE_ID // Jenkins environment variable for PR number
+    def sha = env.GIT_COMMIT // Jenkins environment variable for the commit SHA
+
+    def url = "https://api.github.com/repos/${repo}/statuses/${sha}"
+
+    def payload = [
+        state: state,
+        description:description,
+        context:"Jenkins CI/CD Pull Request Check",
+        target_url: env.BUILD_URL
+    ]
+
+    sh """
+        curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+        -H "Content-Type: application/json" \
+        -d '${groovy.json.JsonOutput.toJson(payload)}' \
+        ${url}
+    """
 }
