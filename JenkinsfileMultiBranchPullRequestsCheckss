@@ -4,8 +4,8 @@ pipeline {
         stage('Update Build Name & Description') {
             steps {
                 script {
-                    sh "whoami"
-                    sh "/usr/bin/python3 -m pytest --vresion"
+                    sh "export PATH=$PATH:/var/lib/jenkins/.local/bin"
+                    sh "pytest --vresion"
                 }
             }
         }
