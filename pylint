@@ -16,14 +16,14 @@ pipeline {
                 }
             }
         }
-
-        stage('Install Requirements'){
+        
+        stage('Install Requirements'){    
             when {
                 branch 'PR-*'
             }
             steps {
                 script {
-                    sh "pip3 install -r requirements.txt"
+                    sh "pip3 install pylint==3.0.2"
                 }
             }
         }
@@ -35,30 +35,28 @@ pipeline {
             steps {
                     script {
                         def changedFilesBetweenBranches = sh(script: "git diff --name-only origin/main origin/PR-${env.CHANGE_ID}", returnStdout: true).trim().split('\n')
-                        def changedTestFiles = changedFilesBetweenBranches.findAll { it.contains("test") }
-                        if (changedTestFiles) {
-                            env.TEST_FILES = changedTestFiles.collect { it.trim() }.join(' ')
-                        } 
+                        def changedPythonFiles = changedFilesBetweenBranches.findAll { it.endsWith('.py')}
+                        if (changedPythonFiles){
+                            env.PYTHON_FILES = changedPythonFiles.collect { it.trim() }.join(' ')
+                        }
                     }
-            }
+                }
         }
-
-        stage('Run Test') {
+        stage('Check Pylint') {
             when {
                allOf {
                     branch 'PR-*'
-                    expression { return env.TEST_FILES?.trim() }
+                    expression { return env.PYTHON_FILES?.trim() }
                 }
             }
             steps {
                 script {
-                    echo "Running tests for files: ${env.TEST_FILES}"
-                    sh "pytest ${env.TEST_FILES}"
+                    sh "pylint ${env.PYTHON_FILES}"   
                 }
             }
         }
     }
-    
+
     post {
         always {
             deleteDir()
