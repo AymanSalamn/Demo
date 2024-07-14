@@ -12,6 +12,14 @@ pipeline {
     }   
     stages {
 
+        stage('Update Build Name & Description') {
+            steps {
+                script {
+                    currentBuild.displayName = "${env.CHANGE_BRANCH}"
+                }
+            }
+        }
+
         stage('Install Requirements'){
             steps {
                 script {
