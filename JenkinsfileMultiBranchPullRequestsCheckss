@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                     sh "pytest --version"
-                    sh "python3 --version"
+                    sh "python3 -m pytest --version"
                 }
             }
         }
