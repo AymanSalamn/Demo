@@ -4,7 +4,7 @@ pipeline {
         stage('Update Build Name & Description') {
             steps {
                 script {
-                    sh "/usr/bin/python3 --version"
+                    sh "/usr/bin/python3 -m /var/lib/jenkins/.local/bin/pytest --vresion"
                 }
             }
         }
