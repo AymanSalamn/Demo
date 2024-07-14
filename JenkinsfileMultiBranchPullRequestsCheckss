@@ -4,8 +4,7 @@ pipeline {
         stage('Update Build Name & Description') {
             steps {
                 script {
-                    sh "echo $PATH"
-                    sh "/var/lib/jenkins/.local/bin/pytest --version"
+                    sh "export PATH=$PATH:/var/lib/jenkins/.local/bin"
                     sh "pytest --version"
                 }
             }
