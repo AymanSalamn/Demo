@@ -15,7 +15,7 @@ pipeline {
         stage('Update Build Name & Description') {
             steps {
                 script {
-                    currentBuild.displayName = "${env.CHANGE_BRANCH}"
+                    currentBuild.displayName = "${env.PYTEST_COMMAND}"
                 }
             }
         }
