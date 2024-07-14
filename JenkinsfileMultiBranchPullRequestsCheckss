@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        PATH = "/var/lib/jenkins/.local/bin:$PATH"
+        PATH = "/usr/bin/python3:/var/lib/jenkins/.local/bin:$PATH"
     }
 
     stages {
@@ -10,6 +10,7 @@ pipeline {
             steps {
                 script {
                     sh "pytest --version"
+                    sh "python3 --version"
                 }
             }
         }
