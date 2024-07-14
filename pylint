@@ -1,7 +1,22 @@
 pipeline {
     agent any
-    stages {
 
+    environment {
+        PATH = "/var/lib/jenkins/.local/bin:$PATH"
+    }
+
+    stages {
+        stage('Update Build Name & Description') {
+            when {
+                branch 'PR-*'
+            }
+            steps {
+                script {
+                    currentBuild.displayName = "${env.CHANGE_BRANCH}"
+                }
+            }
+        }
+        
         stage('Install Requirements'){    
             when {
                 branch 'PR-*'
@@ -36,7 +51,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "/var/lib/jenkins/.local/bin/pylint ${env.PYTHON_FILES}"   
+                    sh "pylint ${env.PYTHON_FILES}"   
                 }
             }
         }
