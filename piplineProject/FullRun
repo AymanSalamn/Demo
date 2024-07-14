@@ -8,6 +8,7 @@ pipeline {
         AWS_ACCESS_KEY_ID = credentials('aws_access_key')
         AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
         AWS_S3_BUCKET = "pytest-allure-report-results"
+        PATH = "/var/lib/jenkins/.local/bin:$PATH"
     }   
     stages {
 
@@ -22,9 +23,6 @@ pipeline {
         stage('Install Allure') {
             steps {
                 script {
-                    // GET current dir 
-                    def current_dir = pwd()
-                    sh "echo ${current_dir}"
                     sh 'wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz'
                     sh "tar -zxf allure-2.27.0.tgz -C ./"
                     sh "./allure-2.27.0/bin/allure --version"
@@ -34,7 +32,7 @@ pipeline {
         stage('Run Test') {
             steps {
                 script {
-                    sh "/var/lib/jenkins/.local/bin/${env.PYTEST_COMMAND} --alluredir=${env.REPORT_DIR_NAME}"
+                    sh "${env.PYTEST_COMMAND} --alluredir=${env.REPORT_DIR_NAME}"
                 }
             }
         }
@@ -72,24 +70,20 @@ pipeline {
 
 
        stage('Upload Results To S3') {
-        steps {
-            script {
-                def todayDate = new Date().format('yyyy-MM-dd')
-                def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTML}"
-                sh "mv ${env.REPORT_DIR_NAME_HTML}.zip ${full_path}"
-                sh "aws s3 cp ${full_path}/${env.REPORT_DIR_NAME_HTML}.zip s3://${env.AWS_S3_BUCKET}/${full_path}/"
-                sh "aws s3 presign s3://pytest-allure-report-results/2024-06-12/url_sahred_tesing_html/url_sahred_tesing_html.zip --expires-in=1000"
+            steps {
+                script {
+                    def todayDate = new Date().format('yyyy-MM-dd')
+                    def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTML}"
+                    sh "mv ${env.REPORT_DIR_NAME_HTML}.zip ${full_path}"
+                    sh "aws s3 cp ${full_path}/${env.REPORT_DIR_NAME_HTML}.zip s3://${env.AWS_S3_BUCKET}/${full_path}/"
+                    sh "aws s3 presign s3://pytest-allure-report-results/2024-06-12/url_sahred_tesing_html/url_sahred_tesing_html.zip --expires-in=1000"
+                }
             }
         }
-    }
 
-        
     }
-    
-    // Add post-build actions if necessary
-    post {
+        post {
         always {
-            // Always clean the workspace regardless of the build result
             deleteDir()
         }
     }
