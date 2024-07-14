@@ -19,7 +19,7 @@ pipeline {
             }
             steps {
                     script {
-                        def changedFilesBetweenBranches = sh(script: "git diff --name-only origin/${env.ghprbTargetBranch} origin/${env.ghprbSourceBranch}", returnStdout: true).trim().split('\n')
+                        def changedFilesBetweenBranches = sh(script: "git diff --name-only origin/main origin/PR-${env.CHANGE_ID}", returnStdout: true).trim().split('\n')
                         def changedPythonFiles = changedFilesBetweenBranches.findAll { it.endsWith('.py')}
                         if (changedPythonFiles){
                             env.PYTHON_FILES = changedPythonFiles.collect { it.trim() }.join(' ')
