@@ -3,3 +3,4 @@ def test_sub():
   assert 19 == 19
   assert 18 == 18
   assert 20 == 20
+  assert 10 == 10
