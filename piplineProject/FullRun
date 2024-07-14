@@ -15,7 +15,7 @@ pipeline {
         stage('Update Build Name & Description') {
             steps {
                 script {
-                    currentBuild.displayName = "${env.PYTEST_COMMAND}"
+                    currentBuild.displayName = "${env.CHANGE_BRANCH}"
                 }
             }
         }
@@ -40,7 +40,7 @@ pipeline {
         stage('Run Test') {
             steps {
                 script {
-                    sh "${env.PYTEST_COMMAND} --alluredir=${env.REPORT_DIR_NAME}"
+                    sh "python3 -m ${env.PYTEST_COMMAND} --alluredir=${env.REPORT_DIR_NAME}"
                 }
             }
         }
@@ -84,11 +84,10 @@ pipeline {
                     def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTML}"
                     sh "mv ${env.REPORT_DIR_NAME_HTML}.zip ${full_path}"
                     sh "aws s3 cp ${full_path}/${env.REPORT_DIR_NAME_HTML}.zip s3://${env.AWS_S3_BUCKET}/${full_path}/"
-                    sh "aws s3 presign s3://pytest-allure-report-results/2024-06-12/url_sahred_tesing_html/url_sahred_tesing_html.zip --expires-in=1000"
+                    sh "aws s3 presign s3://${env.AWS_S3_BUCKET}/${full_path}/${env.REPORT_DIR_NAME_HTML}.zip --expires-in=1000"
                 }
             }
         }
-
     }
         post {
         always {
