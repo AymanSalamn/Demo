@@ -87,7 +87,7 @@ pipeline {
                     def command = "aws s3 presign s3://${env.AWS_S3_BUCKET}/${full_path}/${env.REPORT_DIR_NAME_HTML}.zip --expires-in=1000"
                     def signed_url = sh(script: command, returnStdout: true).trim()
                     def downloadCommand = "curl -o report.zip '${signed_url}'"
-                    sh(script: downloadCommand)
+                    def status = sh(script: downloadCommand, returnStatus: true)
                 }
             }
         }
