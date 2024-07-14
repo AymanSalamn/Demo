@@ -1,10 +1,14 @@
 pipeline {
     agent any
+    
+    environment {
+        PATH = "/var/lib/jenkins/.local/bin/:\$PATH"
+    }
+
     stages {
         stage('Update Build Name & Description') {
             steps {
                 script {
-                    sh "pip install pytest==8.1.1"
                     sh "pytest --version"
                 }
             }
