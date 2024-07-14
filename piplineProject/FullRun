@@ -84,7 +84,7 @@ pipeline {
                     def full_path = "${todayDate}/${env.REPORT_DIR_NAME_HTML}"
                     sh "mv ${env.REPORT_DIR_NAME_HTML}.zip ${full_path}"
                     sh "aws s3 cp ${full_path}/${env.REPORT_DIR_NAME_HTML}.zip s3://${env.AWS_S3_BUCKET}/${full_path}/"
-                    def signed_url = sh(script: 'aws s3 presign s3://${env.AWS_S3_BUCKET}/${full_path}/${env.REPORT_DIR_NAME_HTML}.zip --expires-in=1000', returnStdout: true).trim()
+                    def signed_url = sh(script: "aws s3 presign s3://\${env.AWS_S3_BUCKET}/\${full_path}/\${env.REPORT_DIR_NAME_HTML}.zip --expires-in=1000", returnStdout: true).trim()
                     echo "Pre-signed URL: ${signed_url}"
                 }
             }
