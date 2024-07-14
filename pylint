@@ -27,7 +27,6 @@ pipeline {
                     }
                 }
         }
-         -
         stage('Check Pylint') {
             when {
                allOf {
