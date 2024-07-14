@@ -1,10 +1,16 @@
 pipeline {
     agent any
+    
+    environment {
+        PATH = "/var/lib/jenkins/.local/bin:$PATH"
+    }
+
     stages {
         stage('Update Build Name & Description') {
             steps {
                 script {
                     sh "pytest --version"
+                    sh "python3 --version"
                 }
             }
         }
