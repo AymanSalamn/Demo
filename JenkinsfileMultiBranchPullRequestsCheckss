@@ -4,7 +4,7 @@ pipeline {
         stage('Update Build Name & Description') {
             steps {
                 script {
-                    sh "python3 --version"
+                    sh "pytest --version"
                 }
             }
         }
