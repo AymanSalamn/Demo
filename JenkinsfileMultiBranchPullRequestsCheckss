@@ -53,7 +53,7 @@ pipeline {
             steps {
                 script {
                     echo "Running tests for files: ${env.TEST_FILES}"
-                    sh "python -m pytest ${env.TEST_FILES}"
+                    sh "python3 -m pytest ${env.TEST_FILES}"
                 }
             }
         }
