@@ -5,7 +5,7 @@ pipeline {
             steps {
                 script {
                     sh "export PATH=$PATH:/var/lib/jenkins/.local/bin"
-                    sh "pytest --vresion"
+                    sh "pytest --version"
                 }
             }
         }
