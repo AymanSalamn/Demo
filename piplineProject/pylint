@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+    environment {
+        PATH = "/var/lib/jenkins/.local/bin:$PATH"
+    }
+
+    stages {
+        stage('Update Build Name & Description') {
+            when {
+                branch 'PR-*'
+            }
+            steps {
+                script {
+                    currentBuild.displayName = "${env.CHANGE_BRANCH}"
+                }
+            }
+        }
+        
+        stage('Install Requirements'){    
+            when {
+                branch 'PR-*'
+            }
+            steps {
+                script {
+                    sh "pip3 install pylint==3.0.2"
+                }
+            }
+        }
+
+        stage('Get Changed Files') {
+            when {
+                branch 'PR-*'
+            }
+            steps {
+                    script {
+                        def changedFilesBetweenBranches = sh(script: "git diff --name-only origin/main origin/PR-${env.CHANGE_ID}", returnStdout: true).trim().split('\n')
+                        def changedPythonFiles = changedFilesBetweenBranches.findAll { it.endsWith('.py')}
+                        if (changedPythonFiles){
+                            env.PYTHON_FILES = changedPythonFiles.collect { it.trim() }.join(' ')
+                        }
+                    }
+                }
+        }
+        stage('Check Pylint') {
+            when {
+               allOf {
+                    branch 'PR-*'
+                    expression { return env.PYTHON_FILES?.trim() }
+                }
+            }
+            steps {
+                script {
+                    sh "pylint ${env.PYTHON_FILES}"   
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            deleteDir()
+        }
+    }
+}
