@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         PATH = "/var/lib/jenkins/.local/bin:$PATH"
+        MY_SECRET_KEY = credentials('MY_SECRET_KEY')
     }
 
     stages {
