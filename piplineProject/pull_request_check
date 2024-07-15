@@ -1,45 +1,59 @@
 pipeline {
     agent any
+
+    environment {
+        PATH = "/var/lib/jenkins/.local/bin:$PATH"
+    }
+
     stages {
-        
         stage('Update Build Name & Description') {
+            when {
+                branch 'PR-*'
+            }
             steps {
                 script {
-                    currentBuild.displayName = "${env.ghprbPullTitle}"
-                    currentBuild.description = "Build triggered by pull request ${env.ghprbPullId}"
+                    currentBuild.displayName = "${env.CHANGE_BRANCH}"
                 }
             }
         }
 
         stage('Install Requirements'){
+            when {
+                branch 'PR-*'
+            }
             steps {
                 script {
-                    sh "pip3 install -r requirements.txt"
+                    sh "pip3 install -q -r requirements.txt"
                 }
             }
         }
 
         stage('Get Changed Files') {
+            when {
+                branch 'PR-*'
+            }
             steps {
-                script {
-                    sh "git fetch --all"
-                    def changedFilesBetweenBranches = sh(script: "git diff --name-only origin/${env.ghprbTargetBranch} origin/${env.ghprbSourceBranch}", returnStdout: true).trim().split('\n')
-                    def changedTestFiles = changedFilesBetweenBranches.findAll { it.contains("test") }
-                    if (changedTestFiles) {
-                        env.TEST_FILES = changedTestFiles.collect { it.trim() }.join(' ')
-                    } 
-                }
+                    script {
+                        def changedFilesBetweenBranches = sh(script: "git diff --name-only origin/main origin/PR-${env.CHANGE_ID}", returnStdout: true).trim().split('\n')
+                        def changedTestFiles = changedFilesBetweenBranches.findAll { it.contains("test") }
+                        if (changedTestFiles) {
+                            env.TEST_FILES = changedTestFiles.collect { it.trim() }.join(' ')
+                        } 
+                    }
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Test') {
             when {
-                expression { return env.TEST_FILES?.trim() }
+               allOf {
+                    branch 'PR-*'
+                    expression { return env.TEST_FILES?.trim() }
+                }
             }
             steps {
                 script {
                     echo "Running tests for files: ${env.TEST_FILES}"
-                    sh "/var/lib/jenkins/.local/bin/pytest ${env.TEST_FILES}"
+                    sh "python3 -m pytest ${env.TEST_FILES}"
                 }
             }
         }
@@ -47,7 +61,6 @@ pipeline {
     
     post {
         always {
-            // Always clean the workspace regardless of the build result
             deleteDir()
         }
     }
