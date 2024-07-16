@@ -23,7 +23,7 @@ pipeline {
             }
             steps {
                 script {
-                    sh "pip3 install pylint==3.0.2"
+                    sh "pip3 install -q pylint==3.0.2"
                 }
             }
         }
