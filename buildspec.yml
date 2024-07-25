@@ -7,11 +7,14 @@ phases:
   pre_build:
     commands:
       - echo "Setting status to pending"
-      - curl -H "Authorization: token $GITHUB_TOKEN" -d '{"state": "pending", "context": "ci/codebuild", "description": "Build started"}' "https://api.github.com/repos/your-repo-owner/your-repo-name/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - |
+        curl -H "Authorization: token $GITHUB_TOKEN" \
+        -d '{"state": "pending", "context": "ci/codebuild", "description": "Build started"}' \
+        "https://api.github.com/repos/$GITHUB_REPO_OWNER/$GITHUB_REPO_NAME/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION"
   build:
     commands:
       - echo "Starting build..."
-      - echo "Buld Done"
+      - echo "Build Done"
   post_build:
     commands:
       - |
@@ -22,4 +25,6 @@ phases:
           STATUS="failure"
           DESCRIPTION="Build failed"
         fi
-      - curl -H "Authorization: token $GITHUB_TOKEN" -d '{"state": "'"$STATUS"'", "context": "ci/codebuild", "description": "'"$DESCRIPTION"'"}' "https://api.github.com/repos/your-repo-owner/your-repo-name/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION"
+        curl -H "Authorization: token $GITHUB_TOKEN" \
+        -d '{"state": "'"$STATUS"'", "context": "ci/codebuild", "description": "'"$DESCRIPTION"'"}' \
+        "https://api.github.com/repos/$GITHUB_REPO_OWNER/$GITHUB_REPO_NAME/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION"
