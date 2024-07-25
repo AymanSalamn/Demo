@@ -20,24 +20,12 @@ phases:
     commands:
       - echo "Determining changed files..."
       - |
-        # Fetch changes between main and the source branch
         git fetch --all
         CHANGED_FILES=$(git diff --name-only origin/main $CODEBUILD_WEBHOOK_HEAD_REF)
         echo "CHANGED_FILES: $CHANGED_FILES"
-        # Filter for pytest files that start with test_
-        TEST_FILES=$(echo "$CHANGED_FILES" | awk -F'/' '{print $NF}' | grep '^test_.*\.py$')
+        TEST_FILES=$(echo "$CHANGED_FILES" | grep '^tests/')
         echo "TEST_FILES: $TEST_FILES"
-        # If there are test files, set them for pytest
-        if [ -n "$TEST_FILES" ]; then
-          echo "Test files to be run:"
-          echo "$TEST_FILES"
-          echo "$TEST_FILES" > changed_tests.txt
-        else
-          echo "No test files changed."
-          echo "No tests to run."
-          touch changed_tests.txt
-        fi
-
+        
   build:
     commands:
       - echo "Starting Pytest..."
