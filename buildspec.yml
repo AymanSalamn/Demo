@@ -50,3 +50,4 @@ phases:
         else
           echo "No test files to run."
         fi
+      - allure generate --single-file --clean RunTestFile -o RunTestFileReportResults 
