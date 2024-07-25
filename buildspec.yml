@@ -1,12 +1,6 @@
 version: 0.2
 
 phases:
-  install:
-    runtime-versions:
-      python: 3.8
-    commands:
-      - echo "Installing dependencies..."
-      - pip install -r requirements.txt
   pre_build:
     commands:
       - echo "Determining changed files..."
@@ -17,8 +11,11 @@ phases:
         CHANGED_FILES=$(git diff --name-only origin/main $CODEBUILD_WEBHOOK_HEAD_REF)
         echo "CHANGED_FILES: $CHANGED_FILES"
         # Filter for pytest files that start with test_
-        TEST_FILES=$(echo "$CHANGED_FILES" | grep -E '^test_.*\.py$')
+        TEST_FILES=$(echo "$CHANGED_FILES" | grep -E '^test_.*\.py$' | xargs -n 1 basename)
         echo "TEST_FILES: $TEST_FILES"
+        PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo pytest)
+        echo "Running: $PYTEST_COMMAND"
+        
   build:
     commands:
       - echo "Starting build..."
@@ -27,7 +24,6 @@ phases:
         if [ -s changed_tests.txt ]; then
           PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo pytest)
           echo "Running: $PYTEST_COMMAND"
-          $PYTEST_COMMAND
         else
           echo "No test files to run."
         fi
