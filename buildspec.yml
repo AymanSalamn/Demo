@@ -10,7 +10,7 @@ phases:
         - |
           curl -o allure-commandline.zip -L "https://dl.bintray.com/qameta/generic/allure-commandline/2.29.0/allure-commandline-2.29.0.zip"
           unzip allure-commandline.zip -d /opt/allure
-          export PATH=$PATH:/opt/allure/allure-2.17.0/bin
+          export PATH=$PATH:/opt/allure/allure-2.29.0/bin
         
         - echo "Installing dependencies..."
         - pip install -r requirements.txt
