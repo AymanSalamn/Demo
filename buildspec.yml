@@ -53,9 +53,9 @@ phases:
       - allure generate --single-file --clean RunTestFile -o RunTestFileReportResults 
       - zip -r RunTestFileReportResults.zip RunTestFileReportResults
 
-  artifacts:
-    files:
-      - RunTestFileReportResults.zip
-    discard-paths: yes
+artifacts:
+  files:
+    - RunTestFileReportResults.zip
+  discard-paths: yes
 
       
