@@ -6,7 +6,8 @@ phases:
       - echo "Determining changed files..."
       - |
         # Fetch changes between main and the source branch
-        git fetch origin
+        git fetch --all
+        git branch -r
         SOURCE_BRANCH_NAME=$CODEBUILD_SOURCE_VERSION
         CHANGED_FILES=$(git diff --name-only origin/main origin/$SOURCE_BRANCH_NAME)
         
