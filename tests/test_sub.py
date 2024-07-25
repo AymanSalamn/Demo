@@ -6,4 +6,3 @@ def test_sub():
   assert 10 == 10
   assert 25 == 25
   assert 20 == 20
-  assert 88 == 88
