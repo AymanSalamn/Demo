@@ -3,7 +3,6 @@ version: 0.2
 phases:
   install:
       runtime-versions:
-        python: 3.8
         java: corretto11
       commands:
         - echo "Installing Allure..."
@@ -11,32 +10,4 @@ phases:
           wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
           tar -zxf allure-2.27.0.tgz -d /opt/allure
           export PATH=$PATH:/opt/allure/allure-2.29.0/bin
-        
-        - echo "Installing dependencies..."
-        - pip install -r requirements.txt
-
-        
-  pre_build:
-    commands:
-      - echo "Determining changed files..."
-      - |
-        git fetch --all
-        CHANGED_FILES=$(git diff --name-only origin/main $CODEBUILD_WEBHOOK_HEAD_REF)
-        echo "CHANGED_FILES: $CHANGED_FILES"
-        TEST_FILES=$(echo "$CHANGED_FILES" | grep '^tests/')
-        echo "TEST_FILES: $TEST_FILES"
-        
-  build:
-    commands:
-      - echo "validate allure command"
-      - allure --version
-      - echo "Starting Pytest..."
-      - |
-        # Construct the pytest command with all changed test files
-        if [ -s changed_tests.txt ]; then
-          PYTEST_COMMAND="python -m pytest $(cat changed_tests.txt) --alluredir=RunTestFile"
-          echo "Running: $PYTEST_COMMAND"
-          $PYTEST_COMMAND
-        else
-          echo "No test files to run."
-        fi
+        - allure --version
