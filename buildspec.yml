@@ -4,16 +4,43 @@ phases:
   install:
     runtime-versions:
       python: 3.8
+    commands:
+      - echo "Installing dependencies..."
+      - pip install -r requirements.txt
   pre_build:
     commands:
-      - echo "Setting status to pending"
+      - echo "Determining changed files..."
       - |
-        curl -H "Authorization: token $GITHUB_TOKEN" \
-        -d '{"state": "pending", "context": "ci/codebuild", "description": "Build started", "target_url": "'"$CODEBUILD_BUILD_URL"'"}' \
-        "https://api.github.com/repos/$GITHUB_REPO_OWNER/$GITHUB_REPO_NAME/statuses/$CODEBUILD_RESOLVED_SOURCE_VERSION"
+        # Fetch changes between main and the source branch
+        git fetch origin
+        SOURCE_BRANCH_NAME=$CODEBUILD_SOURCE_VERSION
+        CHANGED_FILES=$(git diff --name-only origin/main...$SOURCE_BRANCH_NAME)
+
+        # Filter for pytest files that start with test_
+        TEST_FILES=$(echo "$CHANGED_FILES" | grep -E '^test_.*\.py$')
+
+        # If there are test files, set them for pytest
+        if [ -n "$TEST_FILES" ]; then
+          echo "Test files to be run:"
+          echo "$TEST_FILES"
+          echo "$TEST_FILES" > changed_tests.txt
+        else
+          echo "No test files changed."
+          echo "No tests to run."
+          touch changed_tests.txt
+        fi
   build:
     commands:
       - echo "Starting build..."
+      - |
+        # Construct the pytest command with all changed test files
+        if [ -s changed_tests.txt ]; then
+          PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo pytest)
+          echo "Running: $PYTEST_COMMAND"
+          $PYTEST_COMMAND
+        else
+          echo "No test files to run."
+        fi
       - echo "Build Done"
   post_build:
     commands:
