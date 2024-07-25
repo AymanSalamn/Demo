@@ -7,5 +7,5 @@ phases:
       - |
         # Fetch changes between main and the source branch
         echo "Source branch name: $GITHUB_REPO_NAME"
-        echo "Source branch name: $CODEBUILD_WEBHOOK_BASE_REF"
+        echo "Source branch name: $SourceBranchName"
 
