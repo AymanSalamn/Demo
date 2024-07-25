@@ -2,12 +2,13 @@ version: 0.2
 
 phases:
   install:
-      runtime-versions:
-        java: corretto11
-      commands:
-        - echo "Installing Allure..."
-        - |
-          wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
-          tar -zxf allure-2.27.0.tgz -d /opt/allure
-          export PATH=$PATH:/opt/allure/allure-2.29.0/bin
-        - allure --version
+    runtime-versions:
+      java: corretto11
+    commands:
+      - echo "Installing Allure..."
+      - |
+        wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+        mkdir -p /opt/allure
+        tar -zxf allure-2.27.0.tgz -C /opt/allure
+        export PATH=$PATH:/opt/allure/allure-2.27.0/bin
+      - allure --version
