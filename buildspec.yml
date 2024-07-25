@@ -7,11 +7,10 @@ phases:
       - |
         # Fetch changes between main and the source branch
         git fetch --all
-        SOURCE_BRANCH_NAME=$CODEBUILD_SOURCE_VERSION
         CHANGED_FILES=$(git diff --name-only origin/main $CODEBUILD_WEBHOOK_HEAD_REF)
         echo "CHANGED_FILES: $CHANGED_FILES"
         # Filter for pytest files that start with test_
-        TEST_FILES=$(awk -F'/' '{print $NF}' | grep '^test_.*\.py$' changed_files.txt)
+        TEST_FILES=$(echo "$CHANGED_FILES" | awk -F'/' '{print $NF}' | grep '^test_.*\.py$')
         echo "TEST_FILES: $TEST_FILES"
         PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo pytest)
         echo "Running: $PYTEST_COMMAND"
