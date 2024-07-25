@@ -51,3 +51,11 @@ phases:
           echo "No test files to run."
         fi
       - allure generate --single-file --clean RunTestFile -o RunTestFileReportResults 
+      - zip -r RunTestFileReportResults.zip RunTestFileReportResults
+
+  artifacts:
+    files:
+      - RunTestFileReportResults.zip
+    discard-paths: yes
+
+      
