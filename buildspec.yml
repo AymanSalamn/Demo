@@ -8,5 +8,5 @@ phases:
         # Fetch changes between main and the source branch
         git fetch --all
         git branch -r
-        echo "Source branch name: $CODEBUILD_SOURCE_VERSION"
-        git diff --name-only origin/main origin/$CODEBUILD_SOURCE_VERSION
+        echo "Source branch name: $CODEBUILD_RESOLVED_SOURCE_VERSION"
+        git diff --name-only origin/main origin/$CODEBUILD_RESOLVED_SOURCE_VERSION
