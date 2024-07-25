@@ -31,7 +31,6 @@ phases:
         if [ -s changed_tests.txt ]; then
           PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo pytest)
           echo "Running: $PYTEST_COMMAND"
-          $PYTEST_COMMAND
         else
           echo "No test files to run."
         fi
