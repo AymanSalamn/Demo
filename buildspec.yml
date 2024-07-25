@@ -55,7 +55,7 @@ phases:
 
 artifacts:
   files:
-    - RunTestFileReportResults.zip
+    - RunTestFileReportResults/RunTestFileReportResults.zip
   discard-paths: yes
 
       
