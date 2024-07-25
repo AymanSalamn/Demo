@@ -26,6 +26,15 @@ phases:
         echo "CHANGED_FILES: $CHANGED_FILES"
         TEST_FILES=$(echo "$CHANGED_FILES" | grep '^tests/')
         echo "TEST_FILES: $TEST_FILES"
+        if [ -n "$TEST_FILES" ]; then
+          echo "Test files to be run:"
+          echo "$TEST_FILES"
+          echo "$TEST_FILES" > changed_tests.txt
+        else
+          echo "No test files changed."
+          echo "No tests to run."
+          touch changed_tests.txt
+        fi
         
   build:
     commands:
