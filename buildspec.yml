@@ -12,5 +12,27 @@ phases:
         # Filter for pytest files that start with test_
         TEST_FILES=$(echo "$CHANGED_FILES" | awk -F'/' '{print $NF}' | grep '^test_.*\.py$')
         echo "TEST_FILES: $TEST_FILES"
-        PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo pytest)
-        echo "Running: $PYTEST_COMMAND"
+        # If there are test files, set them for pytest
+        if [ -n "$TEST_FILES" ]; then
+          echo "Test files to be run:"
+          echo "$TEST_FILES"
+          echo "$TEST_FILES" > changed_tests.txt
+        else
+          echo "No test files changed."
+          echo "No tests to run."
+          touch changed_tests.txt
+        fi
+
+  build:
+    commands:
+      - echo "Starting build..."
+      - |
+        # Construct the pytest command with all changed test files
+        if [ -s changed_tests.txt ]; then
+          PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo pytest)
+          echo "Running: $PYTEST_COMMAND"
+          $PYTEST_COMMAND
+        else
+          echo "No test files to run."
+        fi
+      - echo "Build Done"
