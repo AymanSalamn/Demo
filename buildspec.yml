@@ -28,6 +28,8 @@ phases:
         
   build:
     commands:
+      - echo "validate allure command"
+      - allure --version
       - echo "Starting Pytest..."
       - |
         # Construct the pytest command with all changed test files
