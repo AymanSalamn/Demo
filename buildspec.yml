@@ -1,6 +1,13 @@
 version: 0.2
 
 phases:
+  install:
+      runtime-versions:
+        python: 3.8
+      commands:
+        - echo "Installing dependencies..."
+        - pip install -r requirements.txt
+      
   pre_build:
     commands:
       - echo "Determining changed files..."
@@ -29,7 +36,7 @@ phases:
       - |
         # Construct the pytest command with all changed test files
         if [ -s changed_tests.txt ]; then
-          PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo pytest)
+          PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo python -m pytest)
           echo "Running: $PYTEST_COMMAND"
         else
           echo "No test files to run."
