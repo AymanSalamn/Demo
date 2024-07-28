@@ -1,57 +1,45 @@
 version: 0.2
 
-env:
-  variables:
-    pytest_default_command: "python -m pytest"
-    pytest_default_dir: "ReportResults"
-    pytest_command: ""
-    pytest_dir: ""
-    pytest_dir_html: ""
-
 phases:
   install:
       runtime-versions:
         python: 3.8
-        java: corretto11
-      commands:
-        - echo "Installing Allure..."
-        - |
-          wget -q -nv https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
-          mkdir -p /opt/allure
-          tar -zxf allure-2.27.0.tgz -C /opt/allure
-          export PATH=$PATH:/opt/allure/allure-2.27.0/bin
-        
+      commands: 
         - echo "Installing dependencies..."
         - pip install -r requirements.txt
-        - allure --version
+
         
   pre_build:
     commands:
-      - echo "Pre-build Varaible"
-      - pytest_command=${pytest_command:-$pytest_default_command}
-      - pytest_dir=${pytest_dir:-$pytest_default_dir}
-      - pytest_dir_html=${pytest_dir}_html
-      - echo "pytest_command is $pytest_command"
-      - echo "pytest_dir is $pytest_dir"
-      - echo "pytest_dir_html is $pytest_dir_html"
-
-
+      - echo "Determining changed files..."
+      - |
+        # Fetch changes between main and the source branch
+        git fetch --all
+        CHANGED_FILES=$(git diff --name-only origin/main $CODEBUILD_WEBHOOK_HEAD_REF)
+        echo "CHANGED_FILES: $CHANGED_FILES"
+        # Filter for pytest files that start with test_
+        TEST_FILES=$(echo "$CHANGED_FILES" | grep '^tests/')
+        echo "TEST_FILES: $TEST_FILES"
+        # If there are test files, set them for pytest
+        if [ -n "$TEST_FILES" ]; then
+          echo "Test files to be run:"
+          echo "$TEST_FILES"
+          echo "$TEST_FILES" > changed_tests.txt
+        else
+          echo "No test files changed."
+          echo "No tests to run."
+          touch changed_tests.txt
+        fi
 
   build:
     commands:
-      - echo "validate allure command"
-      - allure --version
       - echo "Starting Pytest..."
       - |
-        PYTEST_COMMAND="${pytest_command} $(cat changed_tests.txt) --alluredir=${pytest_dir}"
-        echo "Running: $PYTEST_COMMAND"
-        $PYTEST_COMMAND
-      - allure generate --single-file --clean ${pytest_dir} -o ${pytest_dir_html} 
-      - zip -r ${pytest_dir_html}.zip ${pytest_dir_html}
-    
-artifacts:
-  files:
-    - ${pytest_dir_html}.zip
-  discard-paths: yes
-  name: ${pytest_dir}
-      
+        # Construct the pytest command with all changed test files
+        if [ -s changed_tests.txt ]; then
+          PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo python -m pytest)
+          echo "Running: $PYTEST_COMMAND"
+          $PYTEST_COMMAND
+        else
+          echo "No test files to run."
+        fi
