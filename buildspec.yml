@@ -43,14 +43,9 @@ phases:
       - allure --version
       - echo "Starting Pytest..."
       - |
-        # Construct the pytest command with all changed test files
-        if [ -s changed_tests.txt ]; then
-          PYTEST_COMMAND="${pytest_command} $(cat changed_tests.txt) --alluredir=${pytest_dir}"
-          echo "Running: $PYTEST_COMMAND"
-          $PYTEST_COMMAND
-        else
-          echo "No test files to run."
-        fi
+        PYTEST_COMMAND="${pytest_command} $(cat changed_tests.txt) --alluredir=${pytest_dir}"
+        echo "Running: $PYTEST_COMMAND"
+        $PYTEST_COMMAND
       - allure generate --single-file --clean ${pytest_dir} -o ${pytest_dir_html} 
       - zip -r ${pytest_dir_html}.zip ${pytest_dir_html}
 
