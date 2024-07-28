@@ -48,7 +48,13 @@ phases:
         $PYTEST_COMMAND
       - allure generate --single-file --clean ${pytest_dir} -o ${pytest_dir_html} 
       - zip -r ${pytest_dir_html}.zip ${pytest_dir_html}
-
+reports:
+  myReport:
+    files:
+      - ${pytest_dir_html}.zip
+    discard-paths: yes  
+    name: ${pytest_dir}
+    
 artifacts:
   files:
     - ${pytest_dir_html}.zip
