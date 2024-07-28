@@ -8,12 +8,12 @@ env:
 phases:
   pre_build:
     commands:
-      - echo Pre-build phase
-      - echo ENV_VAR1 is $ENV_VAR1
-      - echo ENV_VAR2 is $ENV_VAR2
+      - echo "Pre-build phase"
+      - echo "ENV_VAR1 is $ENV_VAR1"
+      - echo "ENV_VAR2 is $ENV_VAR2"
   build:
     commands:
-      - echo Build started on `date`
-      - echo Using environment variables
-      - echo ENV_VAR1: $ENV_VAR1
-      - echo ENV_VAR2: $ENV_VAR2
+      - echo "Build started on `date`"
+      - echo "Using environment variables"
+      - echo "ENV_VAR1: $ENV_VAR1"
+      - echo "ENV_VAR2: $ENV_VAR2"
