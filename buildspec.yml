@@ -15,5 +15,5 @@ phases:
     commands:
       - echo "Build started on `date`"
       - echo "Using environment variables"
-      - echo "ENV_VAR1: $ENV_VAR1"
-      - echo "ENV_VAR2: $ENV_VAR2"
+      - echo "ENV_VAR1 $ENV_VAR1"
+      - echo "ENV_VAR2 $ENV_VAR2"
