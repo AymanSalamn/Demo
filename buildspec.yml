@@ -4,14 +4,14 @@ env:
   variables:
     pytest_default_command: "python -m pytest"
     pytest_default_dir: "ReportResults"
-    pytest_command: "$pytest_command"
-    pytest_dir: "$pytest_dir"
+    pytest_command_passed: "$pytest_command"
+    pytest_dir_passed: "$pytest_dir"
 
 phases:
   pre_build:
     commands:
       - echo "Pre-build phase"
-      - pytest_command=${pytest_command:-$pytest_default_command}
-      - pytest_dir=${pytest_dir:-$pytest_default_dir}
+      - pytest_command=${pytest_command_passed:-$pytest_default_command}
+      - pytest_dir=${pytest_dir_passed:-$pytest_default_dir}
       - echo "pytest_command is $pytest_command"
       - echo "pytest_dir is $pytest_dir"
