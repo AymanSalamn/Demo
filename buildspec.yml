@@ -30,7 +30,7 @@ phases:
       - echo "Pre-build Varaible"
       - pytest_command=${pytest_command:-$pytest_default_command}
       - pytest_dir=${pytest_dir:-$pytest_default_dir}
-      - pytest_dir_html=${pytest_dir}.html
+      - pytest_dir_html=${pytest_dir}_html
       - echo "pytest_command is $pytest_command"
       - echo "pytest_dir is $pytest_dir"
       - echo "pytest_dir_html is $pytest_dir_html"
