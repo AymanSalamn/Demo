@@ -1,0 +1,55 @@
+[MAIN]
+ignore=CVS
+
+load-plugins=
+    pylint.extensions.check_elif,
+    pylint.extensions.for_any_all,
+    pylint.extensions.set_membership,
+    pylint.extensions.code_style,
+    pylint.extensions.overlapping_exceptions,
+    pylint.extensions.typing,
+    pylint.extensions.redefined_variable_type,
+    pylint.extensions.comparison_placement
+
+py-version = 3.7.5
+
+fail-under=5.0
+
+disable=
+    singleton-comparison,
+    missing-timeout,
+    missing-module-docstring,
+    too-few-public-methods,
+    redefined-outer-name
+
+[DESIGN]
+# Argument mane style
+argument-naming-style=snake_case
+# Functions name style
+function-naming-style=snake_case
+# Maximum number of function arguments allowed.
+max-args=7
+# Maximum number of locals for function / method body
+max-locals=80
+# Maximum number of return / yield for function / method body
+max-returns=8
+# Maximum number of branch for function / method body
+max-branches=30
+# Maximum number of statements in function / method body
+max-statements=100
+# Maximum number of boolean expressions in an if statement (see R0916).
+max-bool-expr=5
+
+[FORMAT]
+# Maximum number of lines in a module
+max-module-lines=400
+# Maximum number of characters on a single line.
+max-line-length=125
+# Regexp for a line that is allowed to be longer than the limit.
+ignore-long-lines=https?://.*
+# Number of spaces of indent required inside a hanging or continued line.
+indent-after-paren=4
+# Allow the body of an if to be on the same line as the test if there is no else.
+single-line-if-stmt=no
+# Regular expression pattern for variable names.
+variable-rgx=[a-z_]{1,50}$
