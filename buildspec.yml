@@ -18,7 +18,7 @@ phases:
         echo "CHANGED_FILES: $CHANGED_FILES"
         # Filter for pytest files that start with test_
         PYTEST_FILES=$(echo "$CHANGED_FILES" | grep '^tests/')
-        PYLINT_FILES=$(echo "$CHANGED_FILES" | tr ' ' '\n' | grep -E '\.py$)
+        PYLINT_FILES=$(echo "$CHANGED_FILES" | tr ' ' '\n' | grep -E '\.py$')
         if [ -n "$PYTEST_FILES" ]; then
           echo "Test files to be run:"
           echo "$PYTEST_FILES"
