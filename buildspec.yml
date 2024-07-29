@@ -13,22 +13,30 @@ phases:
     commands:
       - echo "Determining changed files..."
       - |
-        # Fetch changes between main and the source branch
         git fetch --all
         CHANGED_FILES=$(git diff --name-only origin/main $CODEBUILD_WEBHOOK_HEAD_REF)
         echo "CHANGED_FILES: $CHANGED_FILES"
         # Filter for pytest files that start with test_
-        TEST_FILES=$(echo "$CHANGED_FILES" | grep '^tests/')
-        echo "TEST_FILES: $TEST_FILES"
-        # If there are test files, set them for pytest
-        if [ -n "$TEST_FILES" ]; then
+        PYTEST_FILES=$(echo "$CHANGED_FILES" | grep '^tests/')
+        PYLINT_FILES=$(echo "$CHANGED_FILES" | tr ' ' '\n' | grep -E '\.py$)
+        if [ -n "$PYTEST_FILES" ]; then
           echo "Test files to be run:"
-          echo "$TEST_FILES"
-          echo "$TEST_FILES" > changed_tests.txt
+          echo "$PYTEST_FILES"
+          echo "$PYTEST_FILES" > changed_tests.txt
         else
           echo "No test files changed."
           echo "No tests to run."
           touch changed_tests.txt
+        fi
+
+        if [ -n "$PYLINT_FILES" ]; then
+          echo "Test files to be run:"
+          echo "$PYLINT_FILES"
+          echo "$PYLINT_FILES" > changed_pylint_files.txt
+        else
+          echo "No test files changed."
+          echo "No tests to run."
+          touch changed_pylint_files.txt
         fi
 
   build:
@@ -40,6 +48,14 @@ phases:
           PYTEST_COMMAND=$(cat changed_tests.txt | xargs echo python -m pytest)
           echo "Running: $PYTEST_COMMAND"
           $PYTEST_COMMAND
+        else
+          echo "No test files to run."
+        fi
+
+        if [ -s changed_pylint_files.txt ]; then
+          PYLINT_COMMAND=$(cat changed_pylint_files.txt | xargs echo pylint --rcfile=.pylintrc)
+          echo "Running: $PYLINT_COMMAND"
+          $PYLINT_COMMAND
         else
           echo "No test files to run."
         fi
